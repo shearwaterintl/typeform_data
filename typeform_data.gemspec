@@ -40,10 +40,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'minitest', '~> 5.0'
 
-  spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'pry-byebug'
-  spec.add_development_dependency 'pry-doc'
-  spec.add_development_dependency 'byebug'
-  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'pry', '0.10'
+  spec.add_development_dependency 'pry-byebug', '3.3'
+  spec.add_development_dependency 'pry-doc', '0.8'
+  spec.add_development_dependency 'byebug', '8.2'
+  spec.add_development_dependency 'rubocop', '0.39'
 
 end
