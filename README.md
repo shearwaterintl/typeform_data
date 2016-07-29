@@ -2,16 +2,17 @@
 
 A Ruby client for Typeform's Data API (https://www.typeform.com/help/data-api/).
 
+This is alpha software and doesn't currently cover all the use cases you'd probably expect. I've just finished implementing response fetching (including de-pagination, so you fetch _all_ the responses in one method call), but the full data model isn't built out yet.
+
+Unless you're eager to dive into the code, I'd suggest waiting until next week to check out this gem.
+
 TODO:
-  - More detail
-  - Why another gem? What makes this gem different?
+  - Add more detail, and example method calls.
+  - Add an explanation: why another gem? What makes this gem different?
 
-Frustratingly, Typeform's own docs are inconsistent with their API responses.
-https://www.typeform.com/help/data-api/
+### Notes on the API
 
-ID vs. UID
-
-
+  - ID vs. UID: they aren't used consistency across the docs and actual API responses.
 
 ## Installation
 
@@ -47,4 +48,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
