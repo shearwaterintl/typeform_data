@@ -1,7 +1,6 @@
 AllCops:
   TargetRubyVersion: 2.3
   Exclude:
-    - 'bin/*'
     - 'Gemfile'
     - 'Gemfile.lock'
     - 'Rakefile'

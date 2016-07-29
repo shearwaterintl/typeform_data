@@ -1,4 +1,4 @@
-# TypeformDataClient
+# TypeformData
 
 A Ruby client for Typeform's Data API (https://www.typeform.com/help/data-api/).
 
@@ -11,7 +11,7 @@ TODO:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'typeform_data_client'
+gem 'typeform_data'
 ```
 
 And then execute:
@@ -20,7 +20,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install typeform_data_client
+    $ gem install typeform_data
 
 ## Usage
 
@@ -34,7 +34,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/typeform_data_client. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/typeform_data. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
