@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
                          'project is to create a maintainable, extensible client that provides a '\
                          "more natural object-oriented interface to Typeform.com's Data API."
 
-  spec.homepage      = 'https://github.com/maxkwallace/typeform_data'
+  spec.homepage      = 'https://github.com/shearwater-intl/typeform_data'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
