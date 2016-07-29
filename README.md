@@ -2,7 +2,7 @@
 
 A Ruby client for Typeform's Data API (https://www.typeform.com/help/data-api/).
 
-This is alpha software and doesn't currently cover all the use cases you'd probably expect. I've just finished implementing response fetching (including de-pagination, so you fetch _all_ the responses in one method call), but the full data model isn't built out yet.
+This is alpha software and doesn't currently cover all the use cases you'd probably expect. I've just finished implementing response fetching (including de-pagination, so you can fetch _all_ the responses in one method call), but the full data model isn't built out yet.
 
 Unless you're eager to dive into the code, I'd suggest waiting until next week to check out this gem.
 
