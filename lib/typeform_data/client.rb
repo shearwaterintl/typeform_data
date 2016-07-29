@@ -9,12 +9,21 @@ module TypeformData
     end
 
     def all_typeforms
-      get('forms')
+      get('forms').parsed_json.map do |form_hash|
+        ::TypeformData::Typeform.new(self, form_hash)
+      end
     end
 
-    private
+    def typeform(id)
+      ::TypeformData::Typeform.new(self, id)
+    end
 
-    # @return TypeformData::Response
+    # Your API key will automatically be added to the request URL as a query param, as required by
+    # the API.
+    #
+    # @param String
+    # @param Hash
+    # @return TypeformData::ApiResponse
     def get(endpoint, params = {})
       @_requestor.get(endpoint, params)
     end

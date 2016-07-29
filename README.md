@@ -6,6 +6,13 @@ TODO:
   - More detail
   - Why another gem? What makes this gem different?
 
+Frustratingly, Typeform's own docs are inconsistent with their API responses.
+https://www.typeform.com/help/data-api/
+
+ID vs. UID
+
+
+
 ## Installation
 
 Add this line to your application's Gemfile:

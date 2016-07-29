@@ -5,4 +5,3 @@ require 'typeform_data'
 require 'minitest/autorun'
 
 require 'pry'
-

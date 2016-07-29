@@ -18,13 +18,16 @@ module TypeformData
     end
 
     # rubocop:disable Metrics/MethodLength
+    # @return TypeformData::ApiResponse
     def request(method_class, path, input_params = {})
       params = input_params.dup
       params[:key] = @config.api_key
 
       response = Net::HTTP.new(@config.host, @config.port).tap { |http|
         http.use_ssl = true
-        http.set_debug_output($stdout)
+
+        # Uncomment this line for debugging:
+        # http.set_debug_output($stdout)
       }.request(
         method_class.new(
           path + '?' + URI.encode_www_form(params),
@@ -34,14 +37,14 @@ module TypeformData
 
       case response
       when Net::HTTPNotFound then
-        raise TypeformDataClient::InvalidEndpoint, path
+        raise TypeformDataClient::InvalidEndpointOrMissingResource, path
       when Net::HTTPForbidden then
         raise TypeformDataClient::InvalidApiKey, "Invalid api key: #{@config.api_key}"
       when Net::HTTPBadRequest then
         raise TypeformDataClient::BadRequest, 'There was an error processing your request: '\
           "#{response.body}, with params: #{params}"
       when Net::HTTPSuccess
-        return TypeformData::Response.new(response)
+        return TypeformData::ApiResponse.new(response)
       else
         raise TypeformDataClient::UnexpectedError, "A #{response.code} error has occurred: "\
           "'#{response.message}'"
