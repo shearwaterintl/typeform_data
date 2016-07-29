@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Max Wallace"]
   spec.email         = ["maxfield.wallace@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{An opinionated client for the Typeform.com Data API}
+  spec.description   = %q{typeform_data_client is a minimal, opinionated client for the Typeform.com Data API (see https://www.typeform.com/help/data-api/). The goal of this project is to create a maintainable, extensible client that provides a more natural object-oriented interface to Typeform.com's Data API.}
+  spec.homepage      = "https://github.com/maxkwallace/typeform_data_client"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
