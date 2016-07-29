@@ -12,7 +12,7 @@ TODO:
 
 ### Notes on the API
 
-  - ID vs. UID: they aren't used consistency across the docs and actual API responses.
+  - ID vs. UID: they aren't used consistently across the docs and actual API responses.
 
 ## Installation
 
