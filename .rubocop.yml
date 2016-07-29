@@ -1,0 +1,149 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - 'bin/*'
+    - 'Gemfile'
+    - 'Gemfile.lock'
+    - 'Rakefile'
+
+Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: true
+  Max: 100
+
+Style/BlockDelimiters:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: true
+  Max: 31
+
+Style/FormatString:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+Metrics/MethodLength:
+  Max: 24
+
+Metrics/PerceivedComplexity:
+  Max: 9
+
+Rails/TimeZone:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: true
+
+# Chaining multiple blocks together is actively encouraged. It leads to a more functional style
+# based on map/select and helps avoid unintentional side-effects.
+Style/MultilineBlockChain:
+  Enabled: false
+
+Style/Next:
+  Enabled: true
+  MinBodyLength: 1
+
+Style/PredicateName:
+  Enabled: true
+
+Style/RaiseArgs:
+  EnforcedStyle: compact
+
+Style/StructInheritance:
+  Enabled: true
+
+Style/VariableName:
+  Enabled: true
+
+Style/ClassAndModuleChildren:
+  Enabled: true
+
+Style/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+# TODO: these empty lines should be possibly required for long classes, to visually differentiate
+# the first method from the class declaration
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Style/SpaceInsideParens:
+  Enabled: false
+
+Style/AlignHash:
+  Enabled: true
+
+Style/WordArray:
+  Enabled: false
+
+Style/EmptyLines:
+  Enabled: false
+
+Style/AndOr:
+  Enabled: true
+
+Style/SpaceInsideBrackets:
+  Enabled: false
+
+# Disabled so we have more flexibility around aligning operators, e.g. for multiline ternary
+# expressions.
+Style/SpaceAroundOperators:
+  Enabled: false
+
+Style/MultilineTernaryOperator:
+  Enabled: false
+
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Style/TrailingCommaInLiteral:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Style/TrailingWhitespace:
+  Enabled: true
+
+Metrics/ClassLength:
+  Enabled: false
+
+Style/SpaceAfterNot:
+  Enabled: true
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Style/SpaceInsideRangeLiteral:
+  Enabled: true
+
+# Disabling this cop allows us to say:
+#
+# SomeModuleWithA.really_long_method_name_that_goes_all_the_way_over_to_the_other(side, of_the
+#   screen, that_has, many_arguments, which_also_have_long_names)
+#
+# Instead of the following (or similar... obviously this example is a bit exaggerated):
+#
+# SomeModuleWithA.really_long_method_name_that_goes_all_the_way_over_to_the_other(side, of_the
+#                                                                                 screen, that_has,
+#                                                                                 many_arguments,
+#                                                                       which_also_have_long_names)
+Style/AlignParameters:
+  Enabled: false
+
+Style/ClosingParenthesisIndentation:
+  Enabled: false
+
+Style/RaiseArgs:
+  Enabled: false
+
+Style/CaseIndentation:
+  Enabled: true
+
+# I hate !!, but there's no good alternative. There are legitimiate circumstances where
+# !something.nil? isn't a good solution. I wish Ruby had a to_b ("to boolean") method.
+Style/DoubleNegation:
+  Enabled: false
