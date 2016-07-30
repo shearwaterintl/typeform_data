@@ -58,6 +58,9 @@ module TypeformData
       # handle the awkwardness of returning multiple kinds of data at the same time.
       response = responses_request(collapse_and_validate_responses_params(params))
       set_stats(response['stats']['responses'])
+
+      # It's important that we set the questions first, since the Answer constructor (called
+      # inside the Response constructor) looks up and denormalizes the question text.
       set_questions(response['questions'])
 
       response['responses'].map { |hash|
@@ -65,8 +68,18 @@ module TypeformData
       }
     end
 
+    def fields
+      @_fields ||= ::TypeformData::Typeform::Field.from_questions(questions)
+    end
+
+    # In general, Typeform's "question" concept is less useful than the field concept. TODO: add
+    # more notes on this.
     def questions
-      @_questions ||= fetch_questions
+      (@_questions ||= fetch_questions).reject(&:hidden_field?)
+    end
+
+    def hidden_fields
+      (@_questions ||= fetch_questions).select(&:hidden_field?)
     end
 
     def stats

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module TypeformDataClient
+module TypeformData
   class Error < StandardError; end
   class InvalidApiKey < Error; end
   class ConnectionRefused < Error; end

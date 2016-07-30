@@ -10,6 +10,11 @@ TODO:
   - Add more detail, and example method calls.
   - Add an explanation: why another gem? What makes this gem different?
 
+Goals:
+  - Typeform data (and invidual response data) must work with `Marshal#load` and `Marshal#dump`.
+
+We have to do a lot of reverse-engineering to get an API that feels reasonably intuitive.
+
 ### Notes on the API
 
   - ID vs. UID: they aren't used consistently across the docs and actual API responses.
