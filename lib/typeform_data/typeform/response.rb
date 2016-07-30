@@ -9,11 +9,19 @@ module TypeformData
       attr_reader :typeform_id
       attr_reader :answers
 
+      # It's correct to name this attribute "completed?" and not "complete?" since it's always in
+      # the past tense-- once a potential respondent leaves a Typeform unsubmitted, they can never
+      # go back and complete it.
       def completed?
         @completed == 1
       end
 
       alias_method :hidden_fields, :hidden
+
+      # TODO: make sure this works:
+      def date_submitted
+        DateTime.strptime(metadata['date_submit'], '%Y-%m-%d %H:%M:%S')
+      end
 
       def initialize(typeform, token:, metadata:, hidden:, completed:, answers:)
         @typeform_id = typeform.id
