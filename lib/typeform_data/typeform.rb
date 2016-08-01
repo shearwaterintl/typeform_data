@@ -2,6 +2,7 @@
 require 'typeform_data/version'
 
 module TypeformData
+
   class Typeform
     attr_reader :id
     attr_reader :name
@@ -69,7 +70,7 @@ module TypeformData
     end
 
     def fields
-      @_fields ||= ::TypeformData::Typeform::Field.from_questions(questions)
+      @_fields ||= ::TypeformData::Typeform::Field.from_questions(self, questions)
     end
 
     # In general, Typeform's "question" concept is less useful than the field concept. TODO: add
@@ -86,6 +87,8 @@ module TypeformData
       @_stats ||= fetch_stats
     end
 
+    private
+
     def fetch_questions
       questions = responses_request(limit: 1).parsed_json['questions'] || []
       questions.map { |hash| Question.from_hash(self, hash) }
@@ -97,7 +100,7 @@ module TypeformData
     end
 
     ResponsesRequest = Struct.new(:params, :response) do
-      # Check if we've got everything.
+      # The inverse of 'do we need at least one more request to get all the data we want?'
       # @return Boolean
       def last_request?
         params['limit'] || responses_count < MAX_PAGE_SIZE
@@ -108,22 +111,17 @@ module TypeformData
       end
     end
 
-    # TODO: make this private once the implementation is solid.
-    #
     # It looks like sometimes the Typeform API will report stats that are out-of-date relative to
-    # the responses it actually returns.
+    # the responses it actually returns. TODO: look into this more.
     def responses_request(input_params = {})
       params = input_params.dup
       requests = [ResponsesRequest.new(params, @client.get('form/' + id, params))]
 
       loop do
-        if requests.last.last_request?
-          break
-        else
-          next_params = requests.last.params.dup
-          next_params['offset'] += requests.last.responses_count
-          requests << ResponsesRequest.new(next_params, @client.get('form/' + id, next_params))
-        end
+        break if requests.last.last_request?
+        next_params = requests.last.params.dup
+        next_params['offset'] += requests.last.responses_count
+        requests << ResponsesRequest.new(next_params, @client.get('form/' + id, next_params))
       end
 
       requests.map(&:response).map(&:parsed_json).reduce do |combined, next_set|
@@ -132,8 +130,6 @@ module TypeformData
         }
       end
     end
-
-    private
 
     # rubocop:disable Style/AccessorMethodName
     def set_questions(questions_hashes = [])

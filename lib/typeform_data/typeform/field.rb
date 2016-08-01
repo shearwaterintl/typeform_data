@@ -21,8 +21,8 @@ module TypeformData
         @question_ids = question_ids
       end
 
-      def self.from_questions(typeform, questions)
-        questions.group_by(&:field_id).map do |field_id, questions|
+      def self.from_questions(typeform, input_questions)
+        input_questions.group_by(&:field_id).map do |field_id, questions|
           unless questions.map(&:text).uniq.length == 1
             raise UnexpectedError, 'Expected question text to be the same based on field_id'
           end

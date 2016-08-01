@@ -9,7 +9,7 @@ module TypeformData
       attr_reader :typeform_id
 
       # Question#question makes for a bad API. Ideally, use Question#text instead.
-      alias_method :text, :question
+      alias text question
 
       def hidden_field?
         id.split('_').first == 'hidden'

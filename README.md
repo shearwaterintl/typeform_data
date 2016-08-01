@@ -6,6 +6,8 @@ This is alpha software and doesn't currently cover all the use cases you'd proba
 
 Unless you're eager to dive into the code, I'd suggest waiting until next week to check out this gem.
 
+Ruby 2.3
+
 TODO:
   - Add more detail, and example method calls.
   - Add an explanation: why another gem? What makes this gem different?

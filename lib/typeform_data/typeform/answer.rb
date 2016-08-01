@@ -26,7 +26,7 @@ module TypeformData
       # now, it's quite convenient to have.
       attr_reader :field_text
 
-      def initialize(typeform, id:, value:, :field_text)
+      def initialize(typeform, id:, value:, field_text:)
         @typeform_id = typeform.id
         @id = id
         @value = value

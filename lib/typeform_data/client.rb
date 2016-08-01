@@ -15,7 +15,7 @@ module TypeformData
     end
 
     def typeform(id)
-      ::TypeformData::Typeform.new(self, { id: id })
+      ::TypeformData::Typeform.new(self, id: id)
     end
 
     # Your API key will automatically be added to the request URL as a query param, as required by
