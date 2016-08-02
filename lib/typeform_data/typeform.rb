@@ -4,42 +4,10 @@ require 'typeform_data/version'
 module TypeformData
 
   class Typeform
-    attr_reader :id
-    attr_reader :name
+    include TypeformData::ValueClass
+    readable_attributes :id, :name
 
-    MAX_PAGE_SIZE = 1000 # This is documented at https://www.typeform.com/help/data-api/.
-
-    # @param TypeformData::Client
-    # @param Hash<[String, Symbol], String>]
-    def initialize(client, attrs)
-      input_id = attrs['id'] || attrs[:id]
-      name = attrs['name'] || attrs[:name]
-
-      unless client.is_a?(::TypeformData::Client)
-        raise TypeformData::Error, 'Expected to receive a TypeformData::Client'
-      end
-
-      str_id = ''
-
-      begin
-        str_id = input_id.to_s
-      rescue NoMethodError
-        raise TypeformData::Error, "The provided ID is not a String, or can't be converted to one."
-      end
-
-      @id = str_id
-      @name = name if name
-      @client = client
-    end
-
-    PERMITTED_KEYS = {
-      'completed' => Object,
-      'since'     => Object,
-      'until'     => Object,
-      'offset'    => Fixnum,
-      'limit'     => Fixnum,
-      'token'     => String,
-    }.freeze
+    # TODO: define comparison methods <=>, etc.
 
     # See https://www.typeform.com/help/data-api/ under "Filtering Options" for the full list of
     # options.
@@ -64,13 +32,13 @@ module TypeformData
       # inside the Response constructor) looks up and denormalizes the question text.
       set_questions(response['questions'])
 
-      response['responses'].map { |hash|
-        Response.from_hash(self, hash)
+      response['responses'].map { |api_hash|
+        Response.new(config, api_hash.dup.tap { |hash| hash[:typeform_id] = id }, fields)
       }
     end
 
     def fields
-      @_fields ||= ::TypeformData::Typeform::Field.from_questions(self, questions)
+      @_fields ||= Field.from_questions(config, questions)
     end
 
     # In general, Typeform's "question" concept is less useful than the field concept. TODO: add
@@ -87,17 +55,28 @@ module TypeformData
       @_stats ||= fetch_stats
     end
 
+    def ==(other)
+      other.id == id && other.config == config
+    end
+
+    def name
+      return name if name
+      @name ||= client.all_typeforms.find { |typeform| typeform.id == id }.name
+    end
+
     private
 
     def fetch_questions
-      questions = responses_request(limit: 1).parsed_json['questions'] || []
-      questions.map { |hash| Question.from_hash(self, hash) }
+      questions = responses_request(limit: 1)['questions'] || []
+      questions.map { |hash| Question.new(config, hash) }
     end
 
     def fetch_stats
-      stats_hash = responses_request(limit: 1)['stats']['responses']
-      Stats.from_stats_hash(stats_hash)
+      hash = responses_request(limit: 1)['stats']['responses']
+      Stats.new(config, hash)
     end
+
+    MAX_PAGE_SIZE = 1000 # This is documented at https://www.typeform.com/help/data-api/.
 
     ResponsesRequest = Struct.new(:params, :response) do
       # The inverse of 'do we need at least one more request to get all the data we want?'
@@ -115,13 +94,13 @@ module TypeformData
     # the responses it actually returns. TODO: look into this more.
     def responses_request(input_params = {})
       params = input_params.dup
-      requests = [ResponsesRequest.new(params, @client.get('form/' + id, params))]
+      requests = [ResponsesRequest.new(params, client.get('form/' + id, params))]
 
       loop do
         break if requests.last.last_request?
         next_params = requests.last.params.dup
         next_params['offset'] += requests.last.responses_count
-        requests << ResponsesRequest.new(next_params, @client.get('form/' + id, next_params))
+        requests << ResponsesRequest.new(next_params, client.get('form/' + id, next_params))
       end
 
       requests.map(&:response).map(&:parsed_json).reduce do |combined, next_set|
@@ -133,22 +112,31 @@ module TypeformData
 
     # rubocop:disable Style/AccessorMethodName
     def set_questions(questions_hashes = [])
-      @_questions = questions_hashes.map { |hash| Question.from_hash(self, hash) }
+      @_questions = questions_hashes.map { |hash| Question.new(config, hash) }
     end
 
     # @param Hash stats_hash of the form {"responses"=>{"showing"=>2, "total"=>2, "completed"=>0}}
-    def set_stats(stats_hash)
-      @_stats = Stats.from_stats_hash(stats_hash)
+    def set_stats(hash)
+      @_stats = Stats.new(config, hash)
     end
     # rubocop:enable Style/AccessorMethodName
+
+    PERMITTED_KEYS = {
+      'completed' => Object,
+      'since'     => Object,
+      'until'     => Object,
+      'offset'    => Fixnum,
+      'limit'     => Fixnum,
+      'token'     => String,
+    }.freeze
 
     def collapse_and_validate_responses_params(input_params)
       params = input_params.dup
 
       params.keys.select { |key| key.is_a?(Symbol) }.each do |sym|
         raise ::TypeformData::ArgumentError, 'Duplicate keys' if params.key?(sym.to_s)
-        params[sym.to_s] = params[key]
-        params.delete(key)
+        params[sym.to_s] = params[sym]
+        params.delete(sym)
       end
 
       params.keys.each do |key|

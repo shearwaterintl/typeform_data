@@ -3,10 +3,9 @@ module TypeformData
   class Typeform
 
     class Field
-      attr_reader :id
-      attr_reader :text
-      attr_reader :typeform_id
-      attr_reader :question_ids
+      include TypeformData::ValueClass
+      include TypeformData::Typeform::ById
+      readable_attributes :id, :text, :typeform_id, :question_ids
 
       # The Data API includes 'statements' as part of a Typeform's "questions", despite the fact
       # that these statements don't have associated answers.
@@ -14,25 +13,14 @@ module TypeformData
         id.split('_').first == 'statement'
       end
 
-      def initialize(typeform, id:, text:, question_ids:)
-        @typeform_id = typeform.id
-        @id = id
-        @text = text
-        @question_ids = question_ids
-      end
-
-      def self.from_questions(typeform, input_questions)
+      def self.from_questions(config, input_questions)
         input_questions.group_by(&:field_id).map do |field_id, questions|
           unless questions.map(&:text).uniq.length == 1
             raise UnexpectedError, 'Expected question text to be the same based on field_id'
           end
 
-          new(
-            typeform,
-            id: field_id,
-            text: questions.first.text,
-            question_ids: questions.map(&:id),
-          )
+          new(config, id: field_id, text: questions.first.text, question_ids: questions.map(&:id),
+                      typeform_id: questions.first.typeform_id)
         end
       end
 

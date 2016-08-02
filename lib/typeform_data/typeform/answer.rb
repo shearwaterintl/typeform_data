@@ -3,9 +3,12 @@ module TypeformData
   class Typeform
 
     class Answer
-      attr_reader :id
-      attr_reader :value
-      attr_reader :typeform_id
+      include TypeformData::ValueClass
+      include TypeformData::Typeform::ById
+
+      # field_text may be removed in the future: we may want to normalize our data model. For
+      # now, it's quite convenient to have.
+      readable_attributes :id, :value, :field_text, :response_token, :typeform_id
 
       # IDs are of the form:
       #
@@ -22,25 +25,11 @@ module TypeformData
         id.split('_').first
       end
 
-      # This attribute may be removed in the future: we may want to normalize our data model. For
-      # now, it's quite convenient to have.
-      attr_reader :field_text
-
-      def initialize(typeform, id:, value:, field_text:)
-        @typeform_id = typeform.id
-        @id = id
-        @value = value
-        @field_text = field_text
-      end
-
-      def self.from_hash(typeform, hash)
-        new(
-          typeform,
-          id: hash['id'],
-          value: hash['value'],
-          field_text: hash['field_text'],
-        )
-      end
+      # TODO: this is not working-- Typeform is giving us back a 404. Perhaps it's an encoding
+      # issue with the token?
+      # def response
+      #   typeform.responses(token: response_token)
+      # end
     end
 
   end

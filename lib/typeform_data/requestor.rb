@@ -1,29 +1,25 @@
 # frozen_string_literal: true
 
 module TypeformData
-  class Requestor
+  module Requestor
 
-    def initialize(api_key:)
-      @config = ::TypeformData::Requestor::Config.new(api_key: api_key)
+    def self.get(config, endpoint, params = nil)
+      request(config, Net::HTTP::Get, request_path(config, endpoint), params)
     end
 
-    def get(endpoint, params = nil)
-      request(Net::HTTP::Get, request_path(endpoint), params)
+    def self.request_path(config, endpoint)
+      "/v#{config.api_version}/#{endpoint}"
     end
 
-    private
-
-    def request_path(endpoint)
-      "/v#{@config.api_version}/#{endpoint}"
-    end
+    private_class_method :request_path
 
     # rubocop:disable Metrics/MethodLength
     # @return TypeformData::ApiResponse
-    def request(method_class, path, input_params = {})
+    def self.request(config, method_class, path, input_params = {})
       params = input_params.dup
-      params[:key] = @config.api_key
+      params[:key] = config.api_key
 
-      response = Net::HTTP.new(@config.host, @config.port).tap { |http|
+      response = Net::HTTP.new(config.host, config.port).tap { |http|
         http.use_ssl = true
 
         # Uncomment this line for debugging:
@@ -37,23 +33,25 @@ module TypeformData
 
       case response
       when Net::HTTPNotFound then
-        raise TypeformDataClient::InvalidEndpointOrMissingResource, path
+        raise TypeformData::InvalidEndpointOrMissingResource, path
       when Net::HTTPForbidden then
-        raise TypeformDataClient::InvalidApiKey, "Invalid api key: #{@config.api_key}"
+        raise TypeformData::InvalidApiKey, "Invalid api key: #{config.api_key}"
       when Net::HTTPBadRequest then
-        raise TypeformDataClient::BadRequest, 'There was an error processing your request: '\
+        raise TypeformData::BadRequest, 'There was an error processing your request: '\
           "#{response.body}, with params: #{params}"
       when Net::HTTPSuccess
         return TypeformData::ApiResponse.new(response)
       else
-        raise TypeformDataClient::UnexpectedError, "A #{response.code} error has occurred: "\
+        raise TypeformData::UnexpectedError, "A #{response.code} error has occurred: "\
           "'#{response.message}'"
       end
 
     rescue Errno::ECONNREFUSED
-      raise TypeformDataClient::ConnectionRefused, 'The connection was refused'
+      raise TypeformData::ConnectionRefused, 'The connection was refused'
     end
     # rubocop:enable Metrics/MethodLength
+
+    private_class_method :request
 
   end
 end
