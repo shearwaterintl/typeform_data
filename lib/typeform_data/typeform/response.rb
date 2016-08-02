@@ -35,6 +35,17 @@ module TypeformData
             response_token: attrs[:token] || attrs['token'],
             typeform_id: attrs[:typeform_id] || attrs['typeform_id'],
           )
+        }.group_by(:field_id).map { |field_id, answers|
+          unless field_id && field_id.length.positive?
+            raise UnexpectedError, 'Falsy field ID for answer(s)'
+          end
+          return answers.first if answers.length == 1
+
+          Answer.new(
+            config,
+            id:
+            # Add other coalescing here...
+          )
         }
 
         super(config, mapped_attrs)

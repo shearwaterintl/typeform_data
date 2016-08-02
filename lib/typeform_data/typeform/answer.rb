@@ -17,7 +17,7 @@ module TypeformData
       #
       # This list may not be exhaustive-- there may be other ID formats not covererd above-- since
       # this part of the API isn't mentioned in the documentation.
-      def question_field_id
+      def field_id
         id.split('_')[1]
       end
 
