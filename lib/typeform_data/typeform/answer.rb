@@ -30,6 +30,34 @@ module TypeformData
       # def response
       #   typeform.responses(token: response_token)
       # end
+
+      # Use this method to create Answers when initializing a Response.
+      # @return [Array<Answer>]
+      def self.from_response_attrs(config, attrs, fields)
+        (attrs[:answers] || attrs['answers']).group_by { |id, _value|
+          field_id = id.split('_')[1]
+
+          unless field_id && field_id.length.positive?
+            raise UnexpectedError, 'Falsy field ID for answer(s)'
+          end
+
+          fields.find { |field| field.id.to_s == field_id }.tap { |matched|
+            raise UnexpectedError, 'Expected to find a matching field' unless matched
+          }
+        }.map { |field, ids_and_values|
+          values = ids_and_values.map(&:last)
+
+          Answer.new(
+            config,
+            id: field.id,
+            value: values.one? ? values.first : values
+            field_text: field.text,
+            response_token: attrs[:token] || attrs['token'],
+            typeform_id: attrs[:typeform_id] || attrs['typeform_id'],
+          )
+        }
+      end
+
     end
 
   end

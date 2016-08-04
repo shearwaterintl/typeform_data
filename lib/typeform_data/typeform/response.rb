@@ -22,32 +22,8 @@ module TypeformData
 
       def initialize(config, attrs, fields)
         mapped_attrs = attrs.dup
-
-        mapped_attrs[:answers] = (attrs[:answers] || attrs['answers']).map { |id, value|
-          matching_field = fields.find { |field| field.id.to_s == id.split('_')[1] }
-          raise UnexpectedError, 'Expected to find a matching field' unless matching_field
-
-          Answer.new(
-            config,
-            id: id,
-            value: value,
-            field_text: matching_field.text,
-            response_token: attrs[:token] || attrs['token'],
-            typeform_id: attrs[:typeform_id] || attrs['typeform_id'],
-          )
-        }.group_by(:field_id).map { |field_id, answers|
-          unless field_id && field_id.length.positive?
-            raise UnexpectedError, 'Falsy field ID for answer(s)'
-          end
-          return answers.first if answers.length == 1
-
-          Answer.new(
-            config,
-            id:
-            # Add other coalescing here...
-          )
-        }
-
+        mapped_attrs[:answers] = Answer.from_response_attrs(config, attrs, fields)
+        mapped_attrs.delete('answers')
         super(config, mapped_attrs)
       end
 
