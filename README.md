@@ -1,6 +1,6 @@
 # TypeformData
 
-A Ruby client for Typeform's [Data API](https://www.typeform.com/help/data-api/).
+A Ruby client for Typeform's [Data API](https://www.typeform.com/help/data-api/). Our documentation is available [here](http://www.rubydoc.info/gems/typeform_data/TypeformData/Typeform).
 
 **Warning**: this is alpha software, and hasn't been thoroughly vetted in production yet. Use at your own risk :).
 
