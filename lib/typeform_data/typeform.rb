@@ -5,9 +5,8 @@ module TypeformData
 
   class Typeform
     include TypeformData::ValueClass
+    include TypeformData::ComparableByIdAndConfig
     readable_attributes :id, :name
-
-    # TODO: define comparison methods <=>, etc.
 
     # See https://www.typeform.com/help/data-api/ under "Filtering Options" for the full list of
     # options.
@@ -23,8 +22,6 @@ module TypeformData
     # @param Hash<[String, Symbol], [String, Symbol]> params
     # @raise TypeformData::ArgumentError
     def responses(params = {})
-      # TODO: not sure what the implementation will be here, since responses_request needs to
-      # handle the awkwardness of returning multiple kinds of data at the same time.
       response = responses_request(collapse_and_validate_responses_params(params))
       set_stats(response['stats']['responses'])
 
@@ -37,28 +34,37 @@ module TypeformData
       }
     end
 
+    # Typeform's 'question' concept (as expressed in the API) has the following disadvantages:
+    #   - Each choice in a multi-select is treated as its own 'question'
+    #   - Hidden Fields are included as 'questions'
+    #   - Statements are included as 'questions'
+    #
+    # In practice, I recommend using TypeformData::Typeform#field instead, as it addresses these
+    # issues. Typeform#quesions is here so you have access to the underlying data if you need it.
+    #
+    # @return [TypeformData::Typeform::Question]
+    def questions
+      @_questions ||= fetch_questions
+    end
+
     def fields
       @_fields ||= Field.from_questions(config, questions)
     end
 
-    # In general, Typeform's "question" concept is less useful than the field concept. TODO: add
-    # more notes on this.
-    def questions
-      (@_questions ||= fetch_questions).reject(&:hidden_field?)
+    def hidden_fields
+      questions.select(&:hidden_field?)
     end
 
-    def hidden_fields
-      (@_questions ||= fetch_questions).select(&:hidden_field?)
+    def statements
+      questions.select(&:statement?)
     end
 
     def stats
       @_stats ||= fetch_stats
     end
 
-    def ==(other)
-      other.id == id && other.config == config
-    end
-
+    # This method will make an AJAX request if this Typeform's name hasn't already been set.
+    # @return [String]
     def name
       return name if name
       @name ||= client.all_typeforms.find { |typeform| typeform.id == id }.name

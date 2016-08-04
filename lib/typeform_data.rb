@@ -31,6 +31,7 @@ require 'typeform_data/client'
 require 'typeform_data/errors'
 require 'typeform_data/config'
 require 'typeform_data/value_class'
+require 'typeform_data/comparable_by_id_and_config'
 
 require 'typeform_data/requestor'
 require 'typeform_data/api_response'
