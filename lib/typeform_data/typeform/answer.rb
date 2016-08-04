@@ -53,7 +53,7 @@ module TypeformData
           Answer.new(
             config,
             id: field.id,
-            value: values.one? ? values.first : values
+            value: values.one? ? values.first : values,
             field_text: field.text,
             response_token: attrs[:token] || attrs['token'],
             typeform_id: attrs[:typeform_id] || attrs['typeform_id'],
