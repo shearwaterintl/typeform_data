@@ -9,15 +9,13 @@ Gem::Specification.new do |spec|
   spec.name          = 'typeform_data'
   spec.version       = TypeformData::VERSION
   spec.authors       = ['Max Wallace']
-  spec.email         = ['maxfield.wallace@gmail.com']
+  spec.email         = ['engineering@shearwaterintl.com']
 
-  spec.summary       = 'An opinionated client for the Typeform.com Data API'
-  spec.description   = 'typeform_data is a minimal, opinionated client for the Typeform.com Data '\
-                         'API (see https://www.typeform.com/help/data-api/). The goal of this '\
-                         'project is to create a maintainable, extensible client that provides a '\
-                         "more natural object-oriented interface to Typeform.com's Data API."
+  spec.summary       = 'An opinionated, OO client for the Typeform.com Data API'
+  spec.description   = 'typeform_data is a minimal, opinionated, OO client for the Typeform.com '\
+                         'Data API with no runtime dependencies.'
 
-  spec.homepage      = 'https://github.com/shearwater-intl/typeform_data'
+  spec.homepage      = 'https://github.com/shearwaterintl/typeform_data'
   spec.license       = 'MIT'
 
   spec.files = `git ls-files -z`.split("\x0").reject { |f|
