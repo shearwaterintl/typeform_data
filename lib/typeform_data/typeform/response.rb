@@ -19,7 +19,7 @@ module TypeformData
       # the past tense-- once a potential respondent leaves a Typeform unsubmitted, they can never
       # go back and complete it.
       def completed?
-        @completed == 1
+        completed == '1'
       end
 
       def date_submitted
