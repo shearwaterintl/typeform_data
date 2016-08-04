@@ -1,27 +1,66 @@
 # TypeformData
 
-A Ruby client for Typeform's Data API (https://www.typeform.com/help/data-api/).
+A Ruby client for Typeform's [Data API](https://www.typeform.com/help/data-api/).
 
-This is alpha software and doesn't currently cover all the use cases you'd probably expect. I've just finished implementing response fetching (including de-pagination, so you can fetch _all_ the responses in one method call), but the full data model isn't built out yet.
+**Warning**: this is alpha software, and hasn't been thoroughly vetted in production yet. Use at your own risk :).
 
-Unless you're eager to dive into the code, I'd suggest waiting until next week to check out this gem.
+##### Usage:
 
-Ruby 2.3
+```
+client = TypeformData::Client.new(api_key: 'YOUR_API_KEY')
+typeforms = client.all_typeforms
 
-TODO:
-  - Add more detail, and example method calls.
-  - Add an explanation: why another gem? What makes this gem different?
+typeform = typeforms.first
+=> #<TypeformData::Typeform
+ @config=#<TypeformData::Config @api_key="YOUR_API_KEY">,
+ @id="TYPEFORM_ID",
+ @name="TYPEFORM_NAME">
 
-Goals:
-  - Typeform data (and invidual response data) must work with `Marshal#load` and `Marshal#dump`.
+all_complete_responses = typeform.responses(completed: true)
+```
 
-We have to do a lot of reverse-engineering to get an API that feels reasonably intuitive.
+Unless you specify a limit, `TypeformData::Typeform#responses` will not paginate, and will make multiple AJAX requests as needed (the Data API only returns up to 1000 responses at a time) to fetch all the matching responses.
 
-### Notes on the API
+You can also specify any of the ["Filtering Options"](https://www.typeform.com/help/data-api/) to pass along to the API call:
 
-  - ID vs. UID: they aren't used consistently across the docs and actual API responses.
+(*Warning*: the `token` parameter isn't working yet.)
 
-## Installation
+```
+some_complete_responses = typeform.responses(limit: 500, offset: 2000, completed: true)
+two_days_of_responses = typeform.responses(from: 1470143917, since: 1470316722)
+
+```
+
+The response data you get back is represented using classes with defined relationships:
+
+```
+typeform.responses.first.answers.first.typeform == a_typeform
+=> true
+
+typeform.fields.map(&:text)
+=> ["What is your name?", "What are your favorite colors?", ...]
+
+typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value] }`
+=> [["What is your name?", "Foo Bar"], ["What are your favorite colors?", ["blue", "orange"]]]
+
+```
+
+##### Notes on the API
+
+So far, we've found Typeform's current Data API to be confusing. In particular, there are a couple design decisions that have been a big source of confusion and friction for us:
+
+- Statements (which are sections of text in a Typeform, and can't be answered) and Hidden Fields (data passed into a form, and not provided by the user) are both included under the `'questions'` key in the API's response JSON. From the perspective of a user, we don't think of these as "questions".
+- Each option in a "Picture choice" (and, IIRC "Multiple choice" as well, if multiple choices are allowed) is returned as its own "question" in the response JSON for questions and answers. We feel that it makes more sense to model these as multiple answers to one question, i.e. an Array-valued answer.
+
+The main goal of this API wrapper is to encapsulate these implementation details (which we find confusing) and provide a more intuitive API for our application code. This means that our data model must deviating in specific places from the implicit data model expressed in the Data API's JSON responses. We're sacrificing consistency for a more intuitive client API. 
+
+##### Notes
+
+  - We haven't tested against any Ruby versions other than 2.3.
+  - At the moment, this gem has no runtime dependencies.
+  - Under the hood, the object relationships are implemented by storing a reference to a config object containing your API key. This is what allows you to say `answer.typeform.responses` and make an API call originating from a `TypeformData::Typeform::Answer` without having to pass in a reference to a client or your API key (again). To avoid leaking your API key, make sure to clear out the `@config` reference if you serialize any of the objects! We've already done a bit here: if you call `Marshal.dump` on a `TypeformData::ValueClass`, we only serialize attributes (not references, and not the `@config` object). 
+
+##### Installation
 
 Add this line to your application's Gemfile:
 
@@ -33,25 +72,18 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install typeform_data
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
+##### Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+##### Releasing a new version
 
-## Contributing
+Update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+##### Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/typeform_data. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-
-## License
+##### License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
