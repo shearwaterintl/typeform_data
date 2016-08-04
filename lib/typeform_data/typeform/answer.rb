@@ -8,6 +8,9 @@ module TypeformData
 
       # field_text may be removed in the future: we may want to normalize our data model. For
       # now, it's quite convenient to have.
+      #
+      # The type of 'value' is [String, Fixnum, Array<String>, Array<Fixnum>], since we are
+      # combining 'answers' from the API's JSON responses if those answers share the same field.
       readable_attributes :id, :value, :field_text, :response_token, :typeform_id
 
       def question_type
