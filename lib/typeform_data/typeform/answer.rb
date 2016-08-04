@@ -10,17 +10,6 @@ module TypeformData
       # now, it's quite convenient to have.
       readable_attributes :id, :value, :field_text, :response_token, :typeform_id
 
-      # IDs are of the form:
-      #
-      # - "textfield_12316024"
-      # - "listimage_12316029_choice_12322262"
-      #
-      # This list may not be exhaustive-- there may be other ID formats not covererd above-- since
-      # this part of the API isn't mentioned in the documentation.
-      def field_id
-        id.split('_')[1]
-      end
-
       def question_type
         id.split('_').first
       end
@@ -31,6 +20,17 @@ module TypeformData
       #   typeform.responses(token: response_token)
       # end
 
+      # In the JSON, answer 'ID's are of the form:
+      #
+      # - "textfield_12316024"
+      # - "listimage_12316029_choice_12322262"
+      #
+      # This list may not be exhaustive-- there may be other ID formats not covererd above-- since
+      # this part of the API isn't mentioned in the documentation.
+      #
+      # For our Answer object, we strip out only the 'listimage_12316029' part, giving Answers the
+      # same specificity as Fields.
+      #
       # Use this method to create Answers when initializing a Response.
       # @return [Array<Answer>]
       def self.from_response_attrs(config, attrs, fields)
