@@ -5,15 +5,20 @@ module TypeformData
     class Answer
       include TypeformData::ValueClass
       include TypeformData::Typeform::ById
+      include TypeformData::ComparableByIdAndConfig
+
+      def sort_key
+        field_id
+      end
 
       # field_text may be removed in the future: we may want to normalize our data model. For
       # now, it's quite convenient to have.
       #
       # The type of 'value' is [String, Fixnum, Array<String>, Array<Fixnum>], since we are
       # combining 'answers' from the API's JSON responses if those answers share the same field.
-      readable_attributes :id, :value, :field_text, :response_token, :typeform_id
+      readable_attributes :field_id, :value, :field_text, :response_token, :typeform_id
 
-      def question_type
+      def field_type
         id.split('_').first
       end
 
@@ -52,7 +57,7 @@ module TypeformData
 
           Answer.new(
             config,
-            id: field.id,
+            field_id: field.id,
             value: values.one? ? values.first : values,
             field_text: field.text,
             response_token: attrs[:token] || attrs['token'],

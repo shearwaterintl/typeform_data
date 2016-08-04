@@ -5,7 +5,15 @@ module TypeformData
     class Response
       include TypeformData::ValueClass
       include TypeformData::Typeform::ById
+      include TypeformData::ComparableByIdAndConfig
+
       readable_attributes :token, :metadata, :hidden, :typeform_id, :answers, :completed
+
+      alias hidden_fields hidden
+
+      def sort_key
+        token
+      end
 
       # It's correct to name this attribute "completed?" and not "complete?" since it's always in
       # the past tense-- once a potential respondent leaves a Typeform unsubmitted, they can never
@@ -13,8 +21,6 @@ module TypeformData
       def completed?
         @completed == 1
       end
-
-      alias hidden_fields hidden
 
       def date_submitted
         DateTime.strptime(metadata['date_submit'], '%Y-%m-%d %H:%M:%S')
@@ -30,10 +36,6 @@ module TypeformData
       def reconfig(config)
         @config = config
         answers.each { |answer| answer.config = config }
-      end
-
-      def ==(other)
-        other.token == token && other.config == config
       end
 
     end

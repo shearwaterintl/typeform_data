@@ -142,17 +142,17 @@ class TypeformDataTest < Minitest::Test
       # This call with initialized questions and stats on the Typeform, as a side-effect.
       responses = typeform.responses
 
-      non_hidden_questions_json = TEST_JSON['questions'].select do |hash|
-        !hash['id'].start_with?('hidden')
+      non_hidden_non_statement_questions_json = TEST_JSON['questions'].select do |hash|
+        !hash['id'].start_with?('hidden') && !hash['id'].start_with?('statement')
       end
 
-      field_ids = non_hidden_questions_json.map { |hash| hash['field_id'] }.uniq.sort
+      field_ids = non_hidden_non_statement_questions_json.map { |hash| hash['field_id'] }.uniq.sort
       assert_equal field_ids, typeform.fields.map(&:id).sort
 
-      question_ids = non_hidden_questions_json.map { |hash| hash['id'] }.sort
+      question_ids = TEST_JSON['questions'].map { |hash| hash['id'] }.sort
       assert_equal question_ids, typeform.questions.map(&:id).sort
 
-      question_texts = non_hidden_questions_json.map { |hash| hash['question'] }.sort
+      question_texts = TEST_JSON['questions'].map { |hash| hash['question'] }.sort
       assert_equal question_texts, typeform.questions.map(&:text).sort
 
       assert_equal typeform.stats.showing, TEST_JSON['stats']['responses']['showing']
@@ -163,6 +163,12 @@ class TypeformDataTest < Minitest::Test
         assert_equal response.answers.length, field_ids.length
         assert_equal response.answers.map(&:field_text).uniq.sort, typeform.fields.map(&:text).sort
       end
+
+      # Make sure we can sort each type without errors:
+      responses.sort
+      responses.sample.answers.sort
+      typeform.questions.sort
+      typeform.fields.sort
     end
   end
   # rubocop:enable Metrics/AbcSize
