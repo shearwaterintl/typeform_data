@@ -15,7 +15,11 @@ typeform = typeforms.first
  @config=#<TypeformData::Config @api_key="YOUR_API_KEY">,
  @id="TYPEFORM_ID",
  @name="TYPEFORM_NAME">
+```
 
+### Fetching responses
+
+```
 all_complete_responses = typeform.responses(completed: true)
 ```
 
@@ -31,10 +35,12 @@ two_days_of_responses = typeform.responses(from: 1470143917, since: 1470316722)
 
 ```
 
+### Questions & answers
+
 The response data you get back is represented using classes with defined relationships:
 
 ```
-typeform.responses.first.answers.first.typeform == a_typeform
+typeform.responses.first.answers.first.typeform == typeform
 => true
 
 typeform.fields.map(&:text)
@@ -45,7 +51,7 @@ typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value
 
 ```
 
-To access a Typeform's questions, we recommend using `TypeformData::Typeform#fields` instead of `TypeformData::Typeform#questions` (see below for why).
+To access a Typeform's questions, we recommend using `TypeformData::Typeform#fields` instead of `TypeformData::Typeform#questions`. Each `TypeformData::Typeform::Answer` is associated to exactly one `TypeformData::Typeform::Field`, and one or more `TypeformData::Typeform::Question`s.
 
 ## Notes on the API
 
