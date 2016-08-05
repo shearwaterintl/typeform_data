@@ -2,8 +2,6 @@
 
 A Ruby client for Typeform's [Data API](https://www.typeform.com/help/data-api/). Our documentation is available [here](http://www.rubydoc.info/gems/typeform_data/TypeformData/Typeform).
 
-**Warning**: this is alpha software, and hasn't been thoroughly vetted in production yet. Use at your own risk :).
-
 ## Usage:
 
 ```
@@ -37,7 +35,7 @@ two_days_of_responses = typeform.responses(from: 1470143917, since: 1470316722)
 
 ### Questions & answers
 
-The response data you get back is represented using classes with defined relationships:
+The response data you get back is represented using classes with defined relationships. All `TypeformData::*` objects should be treated as immutable.
 
 ```
 typeform.responses.first.answers.first.typeform == typeform
@@ -55,18 +53,18 @@ To access a Typeform's questions, we recommend using `TypeformData::Typeform#fie
 
 ## Notes on the API
 
-So far, we've found Typeform's current Data API to be confusing. In particular, there are a couple design decisions that have been a big source of confusion and friction for us:
+So far, we've found Typeform's current Data API to be confusing. In particular, there are a couple design decisions that have been a source of friction for us:
 
 - Statements (which are sections of text in a Typeform, and can't be answered) and Hidden Fields (data passed into a form, and not provided by the user) are both included under the `'questions'` key in the API's response JSON. From the perspective of a user, we don't think of these as "questions".
 - Each option in a "Picture choice" (and, IIRC "Multiple choice" as well, if multiple choices are allowed) is returned as its own "question" in the response JSON for questions and answers. We feel that it makes more sense to model these as multiple answers to one question, i.e. an Array-valued answer.
 
-The main goal of this API wrapper is to encapsulate these implementation details (which we find confusing) and provide a more intuitive API for our application code. This means that our data model must deviating in specific places from the implicit data model expressed in the Data API's JSON responses. We're sacrificing consistency for a more intuitive client API.
+The main goal of this API wrapper is to encapsulate these implementation details and provide a more intuitive API for our application code. This means that our data model must deviate in specific places from the implicit data model expressed in the Data API's JSON responses. We're sacrificing consistency for a more intuitive client API.
 
 ## Notes
 
-  - We haven't tested against any Ruby versions other than 2.3.
   - At the moment, this gem has no runtime dependencies.
-  - Under the hood, the object relationships are implemented by storing a reference to a config object containing your API key. This is what allows you to say `answer.typeform.responses` and make an API call originating from a `TypeformData::Typeform::Answer` without having to pass in a reference to a client or your API key (again). To avoid leaking your API key, make sure to clear out the `@config` reference if you serialize any of the objects! We've already done a bit here: if you call `Marshal.dump` on a `TypeformData::ValueClass`, we only serialize attributes (not references, and not the `@config` object). 
+  - We've only tested this gem against Ruby 2.3. I'm not sure whether it works with older versions.
+  - Under the hood, the object relationships are implemented by storing a reference to a config object containing your API key. This is what allows you to say `answer.typeform.responses` and ultimately make an API call originating from a `TypeformData::Typeform::Answer` without having to pass in a reference to a client or your API key (again). To avoid leaking your API key, make sure to clear out the `@config` reference if you add functionality to serialize any of the objects! We've already done some work here: if you call `Marshal.dump` on a `TypeformData::ValueClass`, we only serialize attributes, and not the `@config` object.
 
 ### Installation
 
