@@ -44,7 +44,7 @@ typeform.responses.first.answers.first.typeform == typeform
 typeform.fields.map(&:text)
 => ["What is your name?", "What are your favorite colors?", ...]
 
-typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value] }`
+typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value] }
 => [["What is your name?", "Foo Bar"], ["What are your favorite colors?", ["blue", "orange"]]]
 
 ```
