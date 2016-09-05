@@ -63,10 +63,10 @@ module TypeformData
       @_stats ||= fetch_stats
     end
 
-    # This method will make an AJAX request if this Typeform's name hasn't already been set.
+    # This method will make an AJAX request if this Typeform's name hasn't already been set during
+    # initialization.
     # @return [String]
     def name
-      return name if name
       @name ||= client.all_typeforms.find { |typeform| typeform.id == id }.name
     end
 
@@ -121,7 +121,7 @@ module TypeformData
       @_questions = questions_hashes.map { |hash| Question.new(config, hash) }
     end
 
-    # @param Hash stats_hash of the form {"responses"=>{"showing"=>2, "total"=>2, "completed"=>0}}
+    # @param [Hash] stats_hash of the form {"responses"=>{"showing"=>2, "total"=>2, "completed"=>0}}
     def set_stats(hash)
       @_stats = Stats.new(config, hash)
     end
@@ -155,7 +155,14 @@ module TypeformData
           "provided: #{params['limit']}"
       end
 
-      params['offset'] ||= 0
+      if params['token']
+        if params.keys.length > 1
+          raise ::TypeformData::ArgumentError, "'token' may not be combined with other filters"
+        end
+      else
+        params['offset'] ||= 0
+      end
+
       params
     end
 
