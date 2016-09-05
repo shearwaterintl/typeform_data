@@ -13,9 +13,11 @@ module TypeformData
       keys = attribute_keys
 
       attrs.each do |key, value|
-        unless keys.include?(key) || keys.include?(key.to_sym)
-          raise ArgumentError, "Unexpected key: #{key}"
-        end
+        # Previously, we would throw an error if an unexpected attribute was present. Unfortunately,
+        # this causes exceptions in production if Typeform adds new fields to their API responses.
+        # We could filter the fields to the expected keys, but that defeats the purpose of having
+        # the validation.
+        next unless keys.include?(key) || keys.include?(key.to_sym)
         instance_variable_set("@#{key}", value)
       end
     end
