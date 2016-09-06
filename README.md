@@ -25,8 +25,6 @@ Unless you specify a limit, `TypeformData::Typeform#responses` will not paginate
 
 You can also specify any of the ["Filtering Options"](https://www.typeform.com/help/data-api/) to pass along to the API call:
 
-(*Warning*: the `token` parameter isn't working yet.)
-
 ```
 some_complete_responses = typeform.responses(limit: 500, offset: 2000, completed: true)
 two_days_of_responses = typeform.responses(from: 1470143917, since: 1470316722)
