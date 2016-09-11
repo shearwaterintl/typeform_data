@@ -47,7 +47,20 @@ typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value
 
 ```
 
-To access a Typeform's questions, we recommend using `TypeformData::Typeform#fields` instead of `TypeformData::Typeform#questions`. Each `TypeformData::Typeform::Answer` is associated to exactly one `TypeformData::Typeform::Field`, and one or more `TypeformData::Typeform::Question`s.
+### Serialization & deserialization
+
+Your API key will not be serialized. `TypeformData::Client#dump` is just a pass-through to `Marshal#dump`, but `Client#load` will re-set your API key on each of the deserialized objects-- this ensures the object graph stays intact through the serialization process.
+
+```
+serialized = client.dump(responses)
+deserialized = client.load(serialized)
+
+> deserialized == responses
+=> true
+
+> deserialized.first.typeform == responses.first.typeform
+=> true
+```
 
 ## Notes on the API
 
@@ -62,7 +75,7 @@ The main goal of this API wrapper is to encapsulate these implementation details
 
   - At the moment, this gem has no runtime dependencies.
   - We've only tested this gem against Ruby 2.3. I'm not sure whether it works with older versions.
-  - Under the hood, the object relationships are implemented by storing a reference to a config object containing your API key. This is what allows you to say `answer.typeform.responses` and ultimately make an API call originating from a `TypeformData::Typeform::Answer` without having to pass in a reference to a client or your API key (again). To avoid leaking your API key, make sure to clear out the `@config` reference if you add functionality to serialize any of the objects! We've already done some work here: if you call `Marshal.dump` on a `TypeformData::ValueClass`, we only serialize attributes, and not the `@config` object.
+  - Under the hood, the object relationships are implemented by storing a reference to a config object containing your API key. This is what allows you to say `answer.typeform.responses` and ultimately make an API call originating from a `TypeformData::Typeform::Answer` without having to pass in a reference to a client or your API key (again). To avoid leaking your API key, make sure to clear out the `@config` reference if you add new serialization functionality! (We've already handled this for `Marshal#dump`.)
 
 ### Installation
 

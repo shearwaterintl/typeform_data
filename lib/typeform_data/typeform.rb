@@ -97,7 +97,7 @@ module TypeformData
     end
 
     # It looks like sometimes the Typeform API will report stats that are out-of-date relative to
-    # the responses it actually returns. TODO: look into this more.
+    # the responses it actually returns.
     def responses_request(input_params = {})
       params = input_params.dup
       requests = [ResponsesRequest.new(params, client.get('form/' + id, params))]
