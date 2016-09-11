@@ -136,7 +136,7 @@ class TypeformDataTest < Minitest::Test
 
   # rubocop:disable Metrics/AbcSize
   def test_the_object_graph
-    typeform, mock = typeform_and_mock
+    typeform, mock = typeform_mock_and_client
 
     typeform.stub :client, mock do
       # This call with initialized questions and stats on the Typeform, as a side-effect.
@@ -174,26 +174,25 @@ class TypeformDataTest < Minitest::Test
   # rubocop:enable Metrics/AbcSize
 
   def test_that_our_api_key_is_not_serialized
-    typeform, mock = typeform_and_mock
+    typeform, mock, client = typeform_mock_and_client
 
     typeform.stub :client, mock do
-      # This call with initialized questions and stats on the Typeform, as a side-effect.
+      # This call will initialize questions and stats on the Typeform, as a side-effect.
       responses = typeform.responses
-      config = responses.first.send(:config)
 
       # We aren't using TypeformData here, since we'd like to make sure that Marshal.dump still
-      # doesn't expose credentials, in case it's used accidentally.
+      # doesn't expose credentials, in case it's used instead of TypeformData::Client#dump.
       dumped = Marshal.dump(responses)
 
       loaded_with_marshal = Marshal.load(dumped)
       assert_nil loaded_with_marshal.first.send(:config)
 
-      loaded = TypeformData.load(dumped, config)
+      loaded = client.load(dumped)
       refute_nil loaded.first.send(:config)
     end
   end
 
-  def typeform_and_mock
+  def typeform_mock_and_client
     client = TypeformData::Client.new(api_key: 'test-api-key')
     typeform = client.typeform('test-typeform-id')
 
@@ -202,7 +201,7 @@ class TypeformDataTest < Minitest::Test
       get: flexmock('Net::HTTP response', parsed_json: TEST_JSON)
     )
 
-    [typeform, mock]
+    [typeform, mock, client]
   end
 
 end

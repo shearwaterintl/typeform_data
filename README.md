@@ -47,7 +47,20 @@ typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value
 
 ```
 
-To access a Typeform's questions, we recommend using `TypeformData::Typeform#fields` instead of `TypeformData::Typeform#questions`. Each `TypeformData::Typeform::Answer` is associated to exactly one `TypeformData::Typeform::Field`, and one or more `TypeformData::Typeform::Question`s.
+### Serialization & deserialization
+
+We cache our Typeform responses in Redis, so this is an important use-case. Your API key will not be serialized. TypeformData::Client#dump is just a pass-through to Marshal.dump, but Client#load will re-set your API key on each of the deserialized objects-- this ensures the object graph stays intact through the serialization process.
+
+```
+serialized = client.dump(typeform.responses)
+deserialized = client.load(serialized)
+
+> deserialized == serialized
+=> true
+
+> deserialized.first.typeform == serialized.first.typeform
+=> true
+```
 
 ## Notes on the API
 

@@ -18,9 +18,9 @@ module TypeformData
     # Your API key will automatically be added to the request URL as a query param, as required by
     # the API.
     #
-    # @param String
-    # @param Hash
-    # @return TypeformData::ApiResponse
+    # @param [String]
+    # @param [Hash]
+    # @return [TypeformData::ApiResponse]
     def get(endpoint, params = {})
       TypeformData::Requestor.get(@config, endpoint, params)
     end
@@ -33,6 +33,27 @@ module TypeformData
 
     def typeform(id)
       ::TypeformData::Typeform.new(@config, id: id)
+    end
+
+    def dump(object)
+      Marshal.dump(object)
+    end
+
+    # @param serialized [String] The output of Marshal.dump(vci) where vci is either (1) an
+    #   instance of TypeformData::ValueClass or (2) an array of instances of
+    #   TypeformData::ValueClass.
+    # @param default [Object] What to return if 'serialized' is blank or not a String.
+    def load(serialized, default = nil)
+      return default unless serialized.is_a?(String) && !serialized.empty?
+
+      Marshal.load(serialized).tap { |marshaled|
+        case marshaled
+        when Array
+          marshaled.each { |object| object.reconfig(@config) }
+        else
+          marshaled.reconfig(@config)
+        end
+      }
     end
 
   end

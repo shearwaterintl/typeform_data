@@ -1,25 +1,4 @@
 # frozen_string_literal: true
-module TypeformData
-
-  def self.dump(object)
-    Marshal.dump(object)
-  end
-
-  # Currently only handles single objects and arrays.
-  # @param [TypeformData::ValueClass]
-  # @param [TypeformData::Config]
-  def self.load(value_class_instance, config)
-    Marshal.load(value_class_instance).tap { |marshaled|
-      case marshaled
-      when Array
-        marshaled.each { |object| object.reconfig(config) }
-      else
-        marshaled.reconfig(config)
-      end
-    }
-  end
-
-end
 
 require 'net/http'
 require 'net/https'
