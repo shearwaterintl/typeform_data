@@ -40,6 +40,23 @@ module TypeformData
       # same specificity as Fields.
       #
       # Use this method to create Answers when initializing a Response.
+      #
+      # @param config [TypeformData::Config]
+      # @param attrs [Hash] Looks like:
+      #   {
+      #    "completed"=>"1",
+      #    "token"=>"581eec6b27c23dc70e047e4354944bfb",
+      #    "metadata"=>{ ... },
+      #    "hidden"=>{ ... },
+      #    "answers"=>
+      #     {
+      #      "answer_id"=>"answer_value",
+      #       ...
+      #     },
+      #    :typeform_id=>"OTFzVb"
+      #   }
+      #
+      # @param fields [Array<TypeformData::Typeform::Field>]
       # @return [Array<Answer>]
       def self.from_response_attrs(config, attrs, fields)
         (attrs[:answers] || attrs['answers']).group_by { |id, _value|
@@ -53,6 +70,7 @@ module TypeformData
             raise UnexpectedError, 'Expected to find a matching field' unless matched
           }
         }.map { |field, ids_and_values|
+          # ids_and_values looks like [[id, value], [id, value], ...]
           values = ids_and_values.map(&:last)
 
           Answer.new(
