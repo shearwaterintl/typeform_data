@@ -51,7 +51,7 @@ module TypeformData
       end
     end
 
-    # Compond classes (e.g. a Response which has many Answers) should use this method to re-set
+    # Compound classes (e.g. a Response which has many Answers) should use this method to re-set
     # 'config' on each child object. ValueClass#reconfig is called in TypeformData#load.
     def reconfig(config)
       self.config = config

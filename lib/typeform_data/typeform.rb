@@ -74,7 +74,7 @@ module TypeformData
 
     def fetch_questions
       questions = responses_request(limit: 1)['questions'] || []
-      questions.map { |hash| Question.new(config, hash) }
+      questions.map { |hash| Question.new(config, hash.merge!(typeform_id: id)) }
     end
 
     def fetch_stats
@@ -118,7 +118,9 @@ module TypeformData
 
     # rubocop:disable Style/AccessorMethodName
     def set_questions(questions_hashes = [])
-      @_questions = questions_hashes.map { |hash| Question.new(config, hash) }
+      @_questions = questions_hashes.map { |hash|
+        Question.new(config, hash.merge(typeform_id: id))
+      }
     end
 
     # @param [Hash] stats_hash of the form {"responses"=>{"showing"=>2, "total"=>2, "completed"=>0}}
