@@ -133,8 +133,8 @@ module TypeformData
       'completed' => Object,
       'since'     => Object,
       'until'     => Object,
-      'offset'    => Fixnum,
-      'limit'     => Fixnum,
+      'offset'    => Integer,
+      'limit'     => Integer,
       'token'     => String,
     }.freeze
 

@@ -146,3 +146,9 @@ Style/CaseIndentation:
 # !something.nil? isn't a good solution. I wish Ruby had a to_b ("to boolean") method.
 Style/DoubleNegation:
   Enabled: false
+
+# Marshal#load is a security concern, but we rely on it for serialization. The end-user is
+# responsible for ensuring any data they deserialize with TypeformData::Client#load comes from a
+# trusted source.
+Security/MarshalLoad:
+  Enabled: false
