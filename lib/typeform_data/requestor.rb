@@ -32,17 +32,17 @@ module TypeformData
       )
 
       case response
-      when Net::HTTPNotFound then
+      when Net::HTTPNotFound
         raise TypeformData::InvalidEndpointOrMissingResource, path
-      when Net::HTTPForbidden then
+      when Net::HTTPForbidden
         raise TypeformData::InvalidApiKey, "Invalid api key: #{config.api_key}"
-      when Net::HTTPBadRequest then
+      when Net::HTTPBadRequest
         raise TypeformData::BadRequest, 'There was an error processing your request: '\
           "#{response.body}, with params: #{params}"
       when Net::HTTPSuccess
         return TypeformData::ApiResponse.new(response)
       else
-        raise TypeformData::UnexpectedError, "A #{response.code} error has occurred: "\
+        raise TypeformData::UnexpectedTypeformApiError, "A #{response.code} error has occurred: "\
           "'#{response.message}'"
       end
 
