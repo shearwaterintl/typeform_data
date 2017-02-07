@@ -5,6 +5,7 @@ require 'net/https'
 require 'uri'
 require 'json'
 
+require 'typeform_data/utils'
 require 'typeform_data/version'
 require 'typeform_data/client'
 require 'typeform_data/errors'
