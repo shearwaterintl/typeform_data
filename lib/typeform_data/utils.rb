@@ -18,6 +18,6 @@ module Utils
         raise if iteration == max_retries - 1
       end
     end
-
   end
+
 end

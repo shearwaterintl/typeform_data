@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'typeform_data/utils'
 
 module TypeformData
   module Requestor
@@ -17,7 +18,7 @@ module TypeformData
       params = input_params.dup
       params[:key] = config.api_key
 
-      retry_with_exponential_backoff([TypeformData::UnexpectedError]) do
+      Utils.retry_with_exponential_backoff([TypeformData::UnexpectedError]) do
 
         response = Net::HTTP.new(config.host, config.port).tap { |http|
           http.use_ssl = true
