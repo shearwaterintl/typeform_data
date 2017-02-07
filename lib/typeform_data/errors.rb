@@ -5,7 +5,7 @@ module TypeformData
   class ConnectionRefused < Error; end
   class BadRequest < Error; end
   class ArgumentError < Error; end
-  class UnexpectedTypeformApiError < Error; end
+  class UnexpectedError < Error; end
 
   # When using the 'token' field in requests, the API may return a 404 even if the endpoint path
   # is correct.

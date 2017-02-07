@@ -17,7 +17,7 @@ module TypeformData
       params = input_params.dup
       params[:key] = config.api_key
 
-      retry_with_exponential_backoff([TypeformData::UnexpectedTypeformApiError]) do
+      retry_with_exponential_backoff([TypeformData::UnexpectedError]) do
 
         response = Net::HTTP.new(config.host, config.port).tap { |http|
           http.use_ssl = true
@@ -42,7 +42,7 @@ module TypeformData
         when Net::HTTPSuccess
           return TypeformData::ApiResponse.new(response)
         else
-          raise TypeformData::UnexpectedTypeformApiError, "A #{response.code} error has occurred: "\
+          raise TypeformData::UnexpectedError, "A #{response.code} error has occurred: "\
             "'#{response.message}'"
         end
 
