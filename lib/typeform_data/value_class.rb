@@ -6,7 +6,8 @@ module TypeformData
 
     def initialize(config, attrs)
       unless config && config.is_a?(TypeformData::Config)
-        raise ArgumentError, 'Expected a TypeformData::Config instance as the first argument'
+        raise TypeformData::ArgumentError, 'Expected a TypeformData::Config instance as the first '\
+          'argument'
       end
       @config = config
 
