@@ -12,6 +12,7 @@ module TypeformData
   class UnexpectedHttpError < UnexpectedError; end
   class UnexpectedHttpResponse < UnexpectedHttpError; end
   class BadRequest < UnexpectedHttpResponse; end
+  class TransientResponseError < UnexpectedHttpResponse; end
 
   # When using the 'token' field in requests, the API may return a 404 even if the endpoint path
   # is correct.

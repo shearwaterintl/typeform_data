@@ -5,9 +5,18 @@ module TypeformData
   module Requestor
 
     RETRY_EXCEPTIONS = [
-      Net::HTTPServiceUnavailable,
-      Errno::ECONNREFUSED,
+      # We wouldn't ordinarily retry in this case, but Typeform appears to have transient issues
+      # with their SSL.
       OpenSSL::SSL::SSLError,
+
+      Errno::ECONNREFUSED,
+      TypeformData::TransientResponseError,
+    ].freeze
+
+    RETRY_RESPONSE_CLASSES = [
+      Net::HTTPServiceUnavailable,
+      Net::HTTPTooManyRequests,
+      Net::HTTPBadGateway,
     ].freeze
 
     def self.get(config, endpoint, params = nil)
@@ -39,6 +48,9 @@ module TypeformData
       response = request_response(config, method_class, path, params)
 
       case response
+      when Net::HTTPSuccess
+        return TypeformData::ApiResponse.new(response)
+
       when Net::HTTPNotFound
         raise TypeformData::InvalidEndpointOrMissingResource, path
       when Net::HTTPForbidden
@@ -46,8 +58,9 @@ module TypeformData
       when Net::HTTPBadRequest
         raise TypeformData::BadRequest, 'Response was a Net::HTTPBadRequest with body: '\
           "#{response.body}. Your request with params: #{params} could not be processed."
-      when Net::HTTPSuccess
-        return TypeformData::ApiResponse.new(response)
+      when *RETRY_RESPONSE_CLASSES
+        raise TypeformData::TransientResponseError, "Response was a #{response.class} "\
+          "(code #{response.code}) with message #{response.message}"
       else
         raise TypeformData::UnexpectedHttpResponse, 'Unexpected HTTP response with code: '\
           "#{response.code} and message: #{response.message}"
