@@ -11,7 +11,7 @@ module TypeformData
     end
 
     def self.new_from_config(config)
-      raise ArgumentError, 'Missing config' unless config
+      raise TypeformData::ArgumentError, 'Missing config' unless config
       new(api_key: config.api_key)
     end
 
@@ -27,12 +27,12 @@ module TypeformData
 
     def all_typeforms
       get('forms').parsed_json.map do |form_hash|
-        ::TypeformData::Typeform.new(@config, form_hash)
+        TypeformData::Typeform.new(@config, form_hash)
       end
     end
 
     def typeform(id)
-      ::TypeformData::Typeform.new(@config, id: id)
+      TypeformData::Typeform.new(@config, id: id)
     end
 
     def dump(object)

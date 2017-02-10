@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Utils
 
   # Repeats the block until it succeeds or a limit is reached, waiting twice as long as it
@@ -11,7 +12,7 @@ module Utils
     max_retries.times do |iteration|
       begin
         break yield
-      rescue *rescued_exceptions => error
+      rescue *rescued_exceptions
         sleep seconds_to_wait
         seconds_to_wait *= 2
 

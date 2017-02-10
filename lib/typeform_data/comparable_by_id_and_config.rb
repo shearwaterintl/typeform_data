@@ -10,14 +10,14 @@ module TypeformData
 
     def ==(other)
       unless other.respond_to?(:sort_key, true) && other.respond_to?(:config, true)
-        raise ArgumentError, "#{other.inspect} does not specify a sort key and config"
+        raise TypeformData::ArgumentError, "#{other.inspect} does not specify a sort key and config"
       end
       other.sort_key == sort_key && other.config == config
     end
 
     def <=>(other)
       unless other.respond_to?(:sort_key)
-        raise ArgumentError, "#{other.inspect} does not specify a sort key"
+        raise TypeformData::ArgumentError, "#{other.inspect} does not specify a sort key"
       end
       other.sort_key <=> sort_key
     end

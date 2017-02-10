@@ -152,3 +152,6 @@ Style/DoubleNegation:
 # trusted source.
 Security/MarshalLoad:
   Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false
