@@ -5,7 +5,7 @@ module TypeformData
 
     def initialize(api_key:)
       unless api_key.is_a?(String) && api_key.length.positive?
-        raise ArgumentError, 'An API key (as a nonempty String) is required'
+        raise TypeformData::ArgumentError, 'An API key (as a nonempty String) is required'
       end
       @api_key = api_key
     end

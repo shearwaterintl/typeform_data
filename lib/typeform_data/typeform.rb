@@ -74,7 +74,7 @@ module TypeformData
 
     def fetch_questions
       questions = responses_request(limit: 1)['questions'] || []
-      questions.map { |hash| Question.new(config, hash) }
+      questions.map { |hash| Question.new(config, hash.merge!(typeform_id: id)) }
     end
 
     def fetch_stats
@@ -118,7 +118,9 @@ module TypeformData
 
     # rubocop:disable Style/AccessorMethodName
     def set_questions(questions_hashes = [])
-      @_questions = questions_hashes.map { |hash| Question.new(config, hash) }
+      @_questions = questions_hashes.map { |hash|
+        Question.new(config, hash.merge(typeform_id: id))
+      }
     end
 
     # @param [Hash] stats_hash of the form {"responses"=>{"showing"=>2, "total"=>2, "completed"=>0}}
@@ -131,8 +133,8 @@ module TypeformData
       'completed' => Object,
       'since'     => Object,
       'until'     => Object,
-      'offset'    => Fixnum,
-      'limit'     => Fixnum,
+      'offset'    => Integer,
+      'limit'     => Integer,
       'token'     => String,
     }.freeze
 
@@ -140,24 +142,24 @@ module TypeformData
       params = input_params.dup
 
       params.keys.select { |key| key.is_a?(Symbol) }.each do |sym|
-        raise ::TypeformData::ArgumentError, 'Duplicate keys' if params.key?(sym.to_s)
+        raise TypeformData::ArgumentError, 'Duplicate keys' if params.key?(sym.to_s)
         params[sym.to_s] = params[sym]
         params.delete(sym)
       end
 
       params.keys.each do |key|
         next if PERMITTED_KEYS.key?(key) && params[key].is_a?(PERMITTED_KEYS[key])
-        raise ::TypeformData::ArgumentError, "Invalid/unsupported param: #{key}"
+        raise TypeformData::ArgumentError, "Invalid/unsupported param: #{key}"
       end
 
       if params['limit'] && params['limit'] > MAX_PAGE_SIZE
-        raise ::TypeformData::ArgumentError, "The maximum limit is #{MAX_PAGE_SIZE}. You "\
+        raise TypeformData::ArgumentError, "The maximum limit is #{MAX_PAGE_SIZE}. You "\
           "provided: #{params['limit']}"
       end
 
       if params['token']
         if params.keys.length > 1
-          raise ::TypeformData::ArgumentError, "'token' may not be combined with other filters"
+          raise TypeformData::ArgumentError, "'token' may not be combined with other filters"
         end
       else
         params['offset'] ||= 0

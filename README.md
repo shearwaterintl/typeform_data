@@ -62,6 +62,13 @@ deserialized = client.load(serialized)
 => true
 ```
 
+### Error-handling
+
+Unless you've encountered a bug, all exceptions raised by this gem should extend from `TypeformData::Error`. For the full exception hierarchy, see `lib/typeform_data/errors`.
+
+If a HTTP request to Typeform fails with an error that we expect to be transient (e.g. a 503) we retry the HTTP request up to 3 times, after waiting 1, 2 and 4 seconds. If you'd prefer a fail-fast approach, send us a PR!
+
+
 ## Notes on the API
 
 So far, we've found Typeform's current Data API to be confusing. In particular, there are a couple design decisions that have been a source of friction for us:

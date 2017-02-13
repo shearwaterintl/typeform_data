@@ -6,7 +6,8 @@ module TypeformData
 
     def initialize(config, attrs)
       unless config && config.is_a?(TypeformData::Config)
-        raise ArgumentError, 'Expected a TypeformData::Config instance as the first argument'
+        raise TypeformData::ArgumentError, 'Expected a TypeformData::Config instance as the first '\
+          'argument'
       end
       @config = config
 
@@ -51,7 +52,7 @@ module TypeformData
       end
     end
 
-    # Compond classes (e.g. a Response which has many Answers) should use this method to re-set
+    # Compound classes (e.g. a Response which has many Answers) should use this method to re-set
     # 'config' on each child object. ValueClass#reconfig is called in TypeformData#load.
     def reconfig(config)
       self.config = config
