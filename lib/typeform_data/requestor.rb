@@ -11,6 +11,11 @@ module TypeformData
 
       Errno::ECONNREFUSED,
       TypeformData::TransientResponseError,
+
+      # Sometimes it takes a while before Typeform's state becomes consistent. In particular, this
+      # can be an issue if you receive a webhook for a form response, then immediately request that
+      # response from Typeform's servers.
+      TypeformData::InvalidEndpointOrMissingResource
     ].freeze
 
     RETRY_RESPONSE_CLASSES = [
