@@ -68,6 +68,7 @@ Unless you've encountered a bug, all exceptions raised by this gem should extend
 
 If a HTTP request to Typeform fails with an error that we expect to be transient (e.g. a 503) we retry the HTTP request up to 3 times, after waiting 1, 2 and 4 seconds. If you'd prefer a fail-fast approach, send us a PR!
 
+Currently, all 404 errors are retried. This is because Typeform occasionally returns a 404 while it's waiting to achieve consistency. For more, see `lib/typeform_data/requestor.rb`.
 
 ## Notes on the API
 
