@@ -41,7 +41,7 @@ module TypeformData
       params[:key] = config.api_key
 
       begin
-        Utils.retry_with_exponential_backoff(RETRY_EXCEPTIONS, max_retries: 3) do
+        Utils.retry_with_exponential_backoff(config, RETRY_EXCEPTIONS, max_retries: 3) do
           request_and_validate_response(config, method_class, path, params)
         end
       rescue *RETRY_EXCEPTIONS => error
