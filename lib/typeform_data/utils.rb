@@ -13,6 +13,9 @@ module Utils
       begin
         break yield
       rescue *rescued_exceptions
+        # TODO: Allow the client to pass in a logger, and use it here.
+        puts "Retry. Waiting #{seconds_to_wait}s, attempt #{iteration} of #{max_retries}."
+
         sleep seconds_to_wait
         seconds_to_wait *= 2
 
