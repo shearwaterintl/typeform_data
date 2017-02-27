@@ -22,7 +22,8 @@ module TypeformData
       Net::HTTPServiceUnavailable,
       Net::HTTPTooManyRequests,
       Net::HTTPBadGateway,
-      Net::HTTPGatewayTimeOut
+      Net::HTTPGatewayTimeOut,
+      Net::HTTPInternalServerError
     ].freeze
 
     def self.get(config, endpoint, params = nil)
