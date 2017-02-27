@@ -6,13 +6,13 @@ module TypeformData
 
     # For the sake of usability, we're breaking convention here and accepting an API key as the
     # first parameter instead of an instance of TypeformData::Config.
-    def initialize(api_key:)
-      @config = TypeformData::Config.new(api_key: api_key)
+    def initialize(api_key:, logger: nil)
+      @config = TypeformData::Config.new(api_key: api_key, logger: logger)
     end
 
     def self.new_from_config(config)
       raise TypeformData::ArgumentError, 'Missing config' unless config
-      new(api_key: config.api_key)
+      new(api_key: config.api_key, logger: config.logger)
     end
 
     # Your API key will automatically be added to the request URL as a query param, as required by
@@ -39,10 +39,10 @@ module TypeformData
       Marshal.dump(object)
     end
 
-    # @param serialized [String] The output of Marshal.dump(vci) where vci is either (1) an
+    # @param [String] The output of Marshal.dump(vci) where vci is either (1) an
     #   instance of TypeformData::ValueClass or (2) an array of instances of
     #   TypeformData::ValueClass.
-    # @param default [Object] What to return if 'serialized' is blank or not a String.
+    # @param [Object] What to return if 'serialized' is blank or not a String.
     def load(serialized, default = nil)
       return default unless serialized.is_a?(String) && !serialized.empty?
 
