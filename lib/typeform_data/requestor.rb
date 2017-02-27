@@ -18,10 +18,11 @@ module TypeformData
       TypeformData::InvalidEndpointOrMissingResource
     ].freeze
 
-    RETRY_RESPONSE_CLASSES = [
+    TRANSIENT_RESPONSE_CLASSES = [
       Net::HTTPServiceUnavailable,
       Net::HTTPTooManyRequests,
       Net::HTTPBadGateway,
+      Net::HTTPGatewayTimeOut
     ].freeze
 
     def self.get(config, endpoint, params = nil)
@@ -63,7 +64,7 @@ module TypeformData
       when Net::HTTPBadRequest
         raise TypeformData::BadRequest, 'Response was a Net::HTTPBadRequest with body: '\
           "#{response.body}. Your request with params: #{params} could not be processed."
-      when *RETRY_RESPONSE_CLASSES
+      when *TRANSIENT_RESPONSE_CLASSES
         raise TypeformData::TransientResponseError, "Response was a #{response.class} "\
           "(code #{response.code}) with message #{response.message}"
       else
