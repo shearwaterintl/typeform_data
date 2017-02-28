@@ -15,7 +15,7 @@ module TypeformData
       # Sometimes it takes a while before Typeform's state becomes consistent. In particular, this
       # can be an issue if you receive a webhook for a form response, then immediately request that
       # response from Typeform's servers.
-      TypeformData::InvalidEndpointOrMissingResource
+      TypeformData::InvalidEndpointOrMissingResource,
     ].freeze
 
     TRANSIENT_RESPONSE_CLASSES = [
@@ -23,7 +23,7 @@ module TypeformData
       Net::HTTPTooManyRequests,
       Net::HTTPBadGateway,
       Net::HTTPGatewayTimeOut,
-      Net::HTTPInternalServerError
+      Net::HTTPInternalServerError,
     ].freeze
 
     def self.get(config, endpoint, params = nil)
