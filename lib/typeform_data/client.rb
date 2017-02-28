@@ -39,10 +39,10 @@ module TypeformData
       Marshal.dump(object)
     end
 
-    # @param [String] The output of Marshal.dump(vci) where vci is either (1) an
+    # @param serialized [String] The output of Marshal.dump(vci) where vci is either (1) an
     #   instance of TypeformData::ValueClass or (2) an array of instances of
     #   TypeformData::ValueClass.
-    # @param [Object] What to return if 'serialized' is blank or not a String.
+    # @param default [Object] What to return if 'serialized' is blank or not a String.
     def load(serialized, default = nil)
       return default unless serialized.is_a?(String) && !serialized.empty?
 

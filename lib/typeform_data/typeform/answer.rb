@@ -41,8 +41,8 @@ module TypeformData
       #
       # Use this method to create Answers when initializing a Response.
       #
-      # @param [TypeformData::Config]
-      # @param [Hash] Looks like:
+      # @param config [TypeformData::Config]
+      # @param attrs [Hash] Looks like:
       #   {
       #    "completed"=>"1",
       #    "token"=>"581eec6b27c23dc70e047e4354944bfb",
@@ -56,7 +56,7 @@ module TypeformData
       #    :typeform_id=>"OTFzVb"
       #   }
       #
-      # @param [Array<TypeformData::Typeform::Field>]
+      # @param fields [Array<TypeformData::Typeform::Field>]
       # @return [Array<Answer>]
       def self.from_response_attrs(config, attrs, fields)
         (attrs[:answers] || attrs['answers']).group_by { |id, _value|
