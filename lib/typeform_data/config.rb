@@ -7,8 +7,8 @@ module TypeformData
     attr_reader :logger
 
     # @param api_key [String]
-    # @param logger [Object implementing the Ruby Logger API] (see
-    # https://ruby-doc.org/stdlib-2.1.0/libdoc/logger/rdoc/Logger.html)
+    # @param logger [Object] Should implement the same API as
+    # https://ruby-doc.org/stdlib-2.1.0/libdoc/logger/rdoc/Logger.html
     def initialize(api_key:, logger: nil)
       unless api_key.is_a?(String) && api_key.length.positive?
         raise TypeformData::ArgumentError, 'An API key (as a nonempty String) is required'

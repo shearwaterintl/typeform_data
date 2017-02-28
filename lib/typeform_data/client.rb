@@ -6,6 +6,9 @@ module TypeformData
 
     # For the sake of usability, we're breaking convention here and accepting an API key as the
     # first parameter instead of an instance of TypeformData::Config.
+    # @param api_key [String]
+    # @param logger [Object] Should implement the same API as
+    # https://ruby-doc.org/stdlib-2.1.0/libdoc/logger/rdoc/Logger.html)
     def initialize(api_key:, logger: nil)
       @config = TypeformData::Config.new(api_key: api_key, logger: logger)
     end
