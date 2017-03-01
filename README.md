@@ -70,6 +70,14 @@ If a HTTP request to Typeform fails with an error that we expect to be transient
 
 Currently, all 404 errors are retried. This is because Typeform occasionally returns a 404 while it's waiting to achieve consistency. For more, see `lib/typeform_data/requestor.rb`.
 
+### Logging
+
+This gem logs error and warning messages to $stdout by default. If you want to log to elsewhere, or in a different format, you can pass in your own logger object (anything that implements the same interface as the [default Ruby logger](https://ruby-doc.org/stdlib-2.1.0/libdoc/logger/rdoc/Logger.html)) like this:
+
+```
+TypeformData::Client.new(api_key: 'YOUR API KEY', logger: logger)
+```
+
 ## Notes on the API
 
 So far, we've found Typeform's current Data API to be confusing. In particular, there are a couple design decisions that have been a source of friction for us:
