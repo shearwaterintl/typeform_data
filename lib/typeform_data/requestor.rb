@@ -15,14 +15,15 @@ module TypeformData
       # Sometimes it takes a while before Typeform's state becomes consistent. In particular, this
       # can be an issue if you receive a webhook for a form response, then immediately request that
       # response from Typeform's servers.
-      TypeformData::InvalidEndpointOrMissingResource
+      TypeformData::InvalidEndpointOrMissingResource,
     ].freeze
 
     TRANSIENT_RESPONSE_CLASSES = [
       Net::HTTPServiceUnavailable,
       Net::HTTPTooManyRequests,
       Net::HTTPBadGateway,
-      Net::HTTPGatewayTimeOut
+      Net::HTTPGatewayTimeOut,
+      Net::HTTPInternalServerError,
     ].freeze
 
     def self.get(config, endpoint, params = nil)
@@ -40,7 +41,7 @@ module TypeformData
       params[:key] = config.api_key
 
       begin
-        Utils.retry_with_exponential_backoff(RETRY_EXCEPTIONS, max_retries: 3) do
+        Utils.retry_with_exponential_backoff(config, RETRY_EXCEPTIONS, max_retries: 3) do
           request_and_validate_response(config, method_class, path, params)
         end
       rescue *RETRY_EXCEPTIONS => error
