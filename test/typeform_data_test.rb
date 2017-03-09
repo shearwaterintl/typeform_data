@@ -6,121 +6,134 @@ TEST_JSON = JSON.parse(<<-TEST_JSON_STRING
   "http_status": 200,
   "stats": {
     "responses": {
-      "showing": 3,
-      "total": 3,
-      "completed": 2
+      "showing": 4,
+      "total": 4,
+      "completed": 4
     }
   },
   "questions": [
     {
-      "id": "yesno_20576020",
-      "question": "Do you like ice cream?",
-      "field_id": 20576020
+      "id": "list_s9XJ_choice_V0ry",
+      "question": "Required: What type of group is your organization?",
+      "field_id": 45281507
     },
     {
-      "id": "textfield_20576021",
-      "question": "Could you share more?",
-      "field_id": 20576021
+      "id": "list_s9XJ_choice_asCn",
+      "question": "Required: What type of group is your organization?",
+      "field_id": 45281507
     },
     {
-      "id": "number_20576025",
-      "question": "What's your favorite number?",
-      "field_id": 20576025
+      "id": "list_s9XJ_choice_aS3W",
+      "question": "Required: What type of group is your organization?",
+      "field_id": 45281507
     },
     {
-      "id": "opinionscale_20576026",
-      "question": "...and your opinion of this form?",
-      "field_id": 20576026
+      "id": "list_s9XJ_other",
+      "question": "Required: What type of group is your organization?",
+      "field_id": 45281507
     },
     {
-      "id": "listimage_20576029_choice_26422262",
-      "question": "Shared question",
-      "field_id": 20576029
+      "id": "list_45281545_choice_57415657",
+      "question": "Non-Required: What type of group is your organization?",
+      "field_id": 45281545
     },
     {
-      "id": "listimage_20576029_choice_26422263",
-      "question": "Shared question",
-      "field_id": 20576029
+      "id": "list_45281545_choice_57415658",
+      "question": "Non-Required: What type of group is your organization?",
+      "field_id": 45281545
     },
     {
-      "id": "listimage_20576029_choice_26422264",
-      "question": "Shared question",
-      "field_id": 20576029
+      "id": "list_45281545_choice_57415659",
+      "question": "Non-Required: What type of group is your organization?",
+      "field_id": 45281545
     },
     {
-      "id": "hidden_email",
-      "question": "email",
-      "field_id": 105139
+      "id": "list_45281545_other",
+      "question": "Non-Required: What type of group is your organization?",
+      "field_id": 45281545
     }
   ],
   "responses": [
     {
       "completed": "1",
-      "token": "581eec6b27c23dc70e047e435494sdff",
+      "token": "22b6616eac4f3a26a7d4490d879c3cf0",
       "metadata": {
         "browser": "default",
         "platform": "other",
-        "date_land": "2016-06-08 16:36:58",
-        "date_submit": "2016-06-08 16:37:29",
-        "user_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+        "date_land": "2017-03-08 20:38:36",
+        "date_submit": "2017-03-08 20:39:33",
+        "user_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/56.0.2924.87 Safari\/537.36",
+        "referer": "https:\/\/devteam4.typeform.com\/to\/HEv9qr",
+        "network_id": "94c4386d47"
       },
-      "hidden": {
-        "email": "one@example.com"
-      },
+      "hidden": [
+
+      ],
       "answers": {
-        "yesno_20576020": "1",
-        "textfield_20576021": "",
-        "number_20576025": "45",
-        "opinionscale_20576026": "6",
-        "listimage_20576029_choice_26422262": "An answer",
-        "listimage_20576029_choice_26422263": "",
-        "listimage_20576029_choice_26422264": "Another answer"
+        "list_s9XJ_choice_V0ry": "RSO",
+        "list_s9XJ_choice_asCn": "Student Government"
       }
     },
     {
       "completed": "1",
-      "token": "fb8a2e464d2b2cd24145sfu154538f7f",
+      "token": "a89344df85f5412275ca23035da95dad",
       "metadata": {
         "browser": "default",
         "platform": "other",
-        "date_land": "2016-06-08 16:36:58",
-        "date_submit": "2016-06-08 16:37:29",
-        "user_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+        "date_land": "2017-03-08 20:40:09",
+        "date_submit": "2017-03-08 20:40:22",
+        "user_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/56.0.2924.87 Safari\/537.36",
+        "referer": "https:\/\/devteam4.typeform.com\/to\/HEv9qr",
+        "network_id": "94c4386d47"
       },
-      "hidden": {
-        "email": "two@example.com"
-      },
+      "hidden": [
+
+      ],
       "answers": {
-        "yesno_20576020": "0",
-        "textfield_20576021": "A lot of text",
-        "number_20576025": "35",
-        "opinionscale_20576026": "6",
-        "listimage_20576029_choice_26422262": "",
-        "listimage_20576029_choice_26422263": "",
-        "listimage_20576029_choice_26422264": "Another answer"
+        "list_s9XJ_choice_V0ry": "RSO",
+        "list_s9XJ_choice_aS3W": "University Department or Program",
+        "list_s9XJ_other": "Other Test"
       }
     },
     {
-      "completed": "0",
-      "token": "67shr97affhbdc40dd850909fb17b304",
+      "completed": "1",
+      "token": "b508fe9762ab6f93efad190e1e890870",
       "metadata": {
         "browser": "default",
         "platform": "other",
-        "date_land": "2016-06-08 16:36:58",
-        "date_submit": "2016-06-08 16:37:29",
-        "user_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+        "date_land": "2017-03-08 20:41:07",
+        "date_submit": "2017-03-08 20:41:16",
+        "user_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/56.0.2924.87 Safari\/537.36",
+        "referer": "https:\/\/devteam4.typeform.com\/to\/HEv9qr",
+        "network_id": "94c4386d47"
       },
-      "hidden": {
-        "email": "three@example.com"
-      },
+      "hidden": [
+
+      ],
       "answers": {
-        "yesno_20576020": "1",
-        "textfield_20576021": "Other text",
-        "number_20576025": "4598",
-        "opinionscale_20576026": "2",
-        "listimage_20576029_choice_26422262": "An answer",
-        "listimage_20576029_choice_26422263": "",
-        "listimage_20576029_choice_26422264": "Another answer"
+        "list_s9XJ_other": "Other Test"
+      }
+    },
+    {
+      "completed": "1",
+      "token": "aac0808e3c9c20edef5efc880ef86db0",
+      "metadata": {
+        "browser": "default",
+        "platform": "other",
+        "date_land": "2017-03-08 20:42:02",
+        "date_submit": "2017-03-08 20:42:50",
+        "user_agent": "Mozilla\/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/56.0.2924.87 Safari\/537.36",
+        "referer": "https:\/\/devteam4.typeform.com\/to\/HEv9qr",
+        "network_id": "94c4386d47"
+      },
+      "hidden": [
+
+      ],
+      "answers": {
+        "list_s9XJ_choice_V0ry": "RSO",
+        "list_s9XJ_choice_asCn": "Student Government",
+        "list_s9XJ_other": "I chose A and B, but also want other",
+        "list_45281545_other": "This one definitely has an other"
       }
     }
   ]
