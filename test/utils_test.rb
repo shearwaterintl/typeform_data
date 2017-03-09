@@ -17,8 +17,11 @@ end
 
 class UtilsTest < Minitest::Test
 
-  def mock_config
-    flexmock('config', logger: Logger.new($stdout))
+  def mock_config(warn_calls_count)
+    flexmock(
+      'config',
+      logger: flexmock('logger').tap { |mock| mock.should_receive(:warn).times(warn_calls_count) }
+    )
   end
 
   def test_retry_with_exponential_backoff_tries_enough
@@ -26,7 +29,7 @@ class UtilsTest < Minitest::Test
     Utils.stub(:sleep, 0) do
       assert_equal(
         'foo',
-        Utils.retry_with_exponential_backoff(mock_config, [RuntimeError]) { client.get('foo') }
+        Utils.retry_with_exponential_backoff(mock_config(3), [RuntimeError]) { client.get('foo') }
       )
     end
   end
@@ -35,7 +38,7 @@ class UtilsTest < Minitest::Test
     client = FakeFlakyClient.new(10)
     Utils.stub(:sleep, 0) do
       assert_raises RuntimeError do
-        Utils.retry_with_exponential_backoff(mock_config, [RuntimeError]) { client.get('foo') }
+        Utils.retry_with_exponential_backoff(mock_config(5), [RuntimeError]) { client.get('foo') }
       end
     end
   end
