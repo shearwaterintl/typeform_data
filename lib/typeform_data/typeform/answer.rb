@@ -67,6 +67,11 @@ module TypeformData
           end
 
           fields.find { |field| field.id.to_s == field_id }.tap { |matched|
+            if !matched
+              binding.pry
+              puts 'hi'
+            end
+
             raise UnexpectedError, 'Expected to find a matching field' unless matched
           }
         }.map { |field, ids_and_values|
