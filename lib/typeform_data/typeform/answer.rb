@@ -28,17 +28,6 @@ module TypeformData
       #   typeform.responses(token: response_token)
       # end
 
-      # In the JSON, answer 'ID's are of the form:
-      #
-      # - "textfield_12316024"
-      # - "listimage_12316029_choice_12322262"
-      #
-      # This list may not be exhaustive-- there may be other ID formats not covererd above-- since
-      # this part of the API isn't mentioned in the documentation.
-      #
-      # For our Answer object, we strip out only the 'listimage_12316029' part, giving Answers the
-      # same specificity as Fields.
-      #
       # Use this method to create Answers when initializing a Response.
       #
       # @param config [TypeformData::Config]
@@ -60,20 +49,7 @@ module TypeformData
       # @return [Array<Answer>]
       def self.from_response_attrs(config, attrs, fields)
         (attrs[:answers] || attrs['answers']).group_by { |id, _value|
-          field_id = id.split('_')[1]
-
-          unless field_id && field_id.length.positive?
-            raise UnexpectedError, 'Falsy field ID for answer(s)'
-          end
-
-          fields.find { |field| field.id.to_s == field_id }.tap { |matched|
-            if !matched
-              binding.pry
-              puts 'hi'
-            end
-
-            raise UnexpectedError, 'Expected to find a matching field' unless matched
-          }
+          matching_field_for_answer(fields, id)
         }.map { |field, ids_and_values|
           # ids_and_values looks like [[id, value], [id, value], ...]
           values = ids_and_values.map(&:last)
@@ -87,6 +63,24 @@ module TypeformData
             typeform_id: attrs[:typeform_id] || attrs['typeform_id'],
           )
         }
+      end
+
+      # In the JSON, answer 'ID's are of the form:
+      #
+      # - "textfield_12316024"
+      # - "listimage_12316029_choice_12322262"
+      #
+      # This list may not be exhaustive-- there may be other ID formats not covererd above-- since
+      # this part of the API isn't mentioned in the documentation.
+      #
+      private_class_method def self.matching_field_for_answer(fields, answer_id)
+        found = fields.find { |field| field.question_ids.include?(answer_id) }
+
+        unless found
+          raise UnexpectedError, "Expected to find a matching field for Answer ID #{answer_id}"
+        end
+
+        found
       end
 
     end
