@@ -72,7 +72,6 @@ module TypeformData
       #
       # This list may not be exhaustive-- there may be other ID formats not covererd above-- since
       # this part of the API isn't mentioned in the documentation.
-      #
       private_class_method def self.matching_field_for_answer(fields, answer_id)
         found = fields.find { |field| field.question_ids.include?(answer_id) }
 
