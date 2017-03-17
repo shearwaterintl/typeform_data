@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'test_helper'
 
-TEST_JSON = JSON.parse(<<-TEST_JSON_STRING
+TEST_JSON_ONE = JSON.parse(<<-TEST_JSON_STRING_ONE
 {
   "http_status": 200,
   "stats": {
@@ -125,83 +125,27 @@ TEST_JSON = JSON.parse(<<-TEST_JSON_STRING
     }
   ]
 }
-TEST_JSON_STRING
+TEST_JSON_STRING_ONE
 )
 
-class TypeformDataTest < Minitest::Test
+class JsonOneTest < ObjectGraphTest
 
-  def test_that_it_has_a_version_number
-    refute_nil ::TypeformData::VERSION
+  def json
+    TEST_JSON_ONE
   end
 
-  # rubocop:disable Metrics/AbcSize
-  def test_the_object_graph
-    typeform, mock = typeform_mock_and_client
+  def test_object_graph
+    assert_object_graph
+    assert_that_our_api_key_is_not_serialized
+  end
 
-    typeform.stub :client, mock do
-      # This call with initialized questions and stats on the Typeform, as a side-effect.
-      responses = typeform.responses
+  def test_responses
+    typeform, responses = mocks
 
-      non_hidden_non_statement_questions_json = TEST_JSON['questions'].select do |hash|
-        !hash['id'].start_with?('hidden') && !hash['id'].start_with?('statement')
-      end
-
-      field_ids = non_hidden_non_statement_questions_json.map { |hash| hash['field_id'] }.uniq.sort
-      assert_equal field_ids, typeform.fields.map(&:id).sort
-
-      question_ids = TEST_JSON['questions'].map { |hash| hash['id'] }.sort
-      assert_equal question_ids, typeform.questions.map(&:id).sort
-
-      question_texts = TEST_JSON['questions'].map { |hash| hash['question'] }.sort
-      assert_equal question_texts, typeform.questions.map(&:text).sort
-
-      assert_equal typeform.stats.showing, TEST_JSON['stats']['responses']['showing']
-      assert_equal typeform.stats.total, TEST_JSON['stats']['responses']['total']
-      assert_equal typeform.stats.completed, TEST_JSON['stats']['responses']['completed']
-
-      responses.each do |response|
-        assert_equal response.answers.length, field_ids.length
-        assert_equal response.answers.map(&:field_text).uniq.sort, typeform.fields.map(&:text).sort
-      end
-
-      # Make sure we can sort each type without errors:
-      responses.sort
-      responses.sample.answers.sort
-      typeform.questions.sort
-      typeform.fields.sort
+    responses.each do |response|
+      assert_equal response.answers.length, json_field_ids.length
+      assert_equal response.answers.map(&:field_text).uniq.sort, typeform.fields.map(&:text).sort
     end
-  end
-  # rubocop:enable Metrics/AbcSize
-
-  def test_that_our_api_key_is_not_serialized
-    typeform, mock, client = typeform_mock_and_client
-
-    typeform.stub :client, mock do
-      # This call will initialize questions and stats on the Typeform, as a side-effect.
-      responses = typeform.responses
-
-      # We aren't using TypeformData here, since we'd like to make sure that Marshal.dump still
-      # doesn't expose credentials, in case it's used instead of TypeformData::Client#dump.
-      dumped = Marshal.dump(responses)
-
-      loaded_with_marshal = Marshal.load(dumped)
-      assert_nil loaded_with_marshal.first.send(:config)
-
-      loaded = client.load(dumped)
-      refute_nil loaded.first.send(:config)
-    end
-  end
-
-  def typeform_mock_and_client
-    client = TypeformData::Client.new(api_key: 'test-api-key')
-    typeform = client.typeform('test-typeform-id')
-
-    mock = flexmock(
-      'TypeformData::Client',
-      get: flexmock('Net::HTTP response', parsed_json: TEST_JSON)
-    )
-
-    [typeform, mock, client]
   end
 
 end
