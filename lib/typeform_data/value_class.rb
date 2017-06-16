@@ -23,6 +23,14 @@ module TypeformData
       end
     end
 
+    # In addition to protection against serializing the API key, this method is needed for #to_json
+    # to work at all, since the :config object contains IO objects and ActiveSupport's #as_json
+    # method fails when trying to serialize IO objects. See
+    # https://github.com/rails/rails/issues/26132.
+    def as_json(options = {})
+      super({ except: 'config' }.merge(options))
+    end
+
     def self.included(base)
       base.extend(ClassMethods)
     end
