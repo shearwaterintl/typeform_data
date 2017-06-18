@@ -38,6 +38,10 @@ module TypeformData
       TypeformData::Typeform.new(@config, id: id)
     end
 
+    # The goals of this alias are:
+    #   1. To bring the serialization process within TypeformData's API, so
+    #        we can modify it in the future if needed.
+    #   2. Maintain symmetry with #load, which needs to be part of the API.
     def dump(object)
       Marshal.dump(object)
     end
@@ -57,6 +61,14 @@ module TypeformData
           marshaled.reconfig(@config)
         end
       }
+    end
+
+    def marshal_dump
+      raise 'Do not serialize TypeformData::Client-- it contains your API key'
+    end
+
+    def as_json(*_args)
+      raise 'Do not serialize TypeformData::Client-- it contains your API key'
     end
 
   end
