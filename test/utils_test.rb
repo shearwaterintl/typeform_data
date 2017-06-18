@@ -26,19 +26,23 @@ class UtilsTest < Minitest::Test
 
   def test_retry_with_exponential_backoff_tries_enough
     client = FakeFlakyClient.new(4)
-    Utils.stub(:sleep, 0) do
+    TypeformData::Utils.stub(:sleep, 0) do
       assert_equal(
         'foo',
-        Utils.retry_with_exponential_backoff(mock_config(3), [RuntimeError]) { client.get('foo') }
+        TypeformData::Utils.retry_with_exponential_backoff(mock_config(3), [RuntimeError]) {
+          client.get('foo')
+        }
       )
     end
   end
 
   def test_retry_with_exponential_backoff_eventually_gives_up
     client = FakeFlakyClient.new(10)
-    Utils.stub(:sleep, 0) do
+    TypeformData::Utils.stub(:sleep, 0) do
       assert_raises RuntimeError do
-        Utils.retry_with_exponential_backoff(mock_config(5), [RuntimeError]) { client.get('foo') }
+        TypeformData::Utils.retry_with_exponential_backoff(mock_config(5), [RuntimeError]) {
+          client.get('foo')
+        }
       end
     end
   end

@@ -65,6 +65,11 @@ module TypeformData
 
     # This method will make an AJAX request if this Typeform's name hasn't already been set during
     # initialization.
+    #
+    # Since the readable_attributes call above calls attr_reader(:name) for us, this method
+    # redefines name, and causes an (expected) "warning: method redefined" message when running
+    # tests.
+    #
     # @return [String]
     def name
       @name ||= client.all_typeforms.find { |typeform| typeform.id == id }.name
