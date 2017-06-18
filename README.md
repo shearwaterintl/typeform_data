@@ -49,7 +49,9 @@ typeform.responses.first.answers.map { |answer| [answer.field_text, answer.value
 
 ### Serialization & deserialization
 
-Your API key will not be serialized. `TypeformData::Client#dump` is just a pass-through to `Marshal#dump`, but `Client#load` will re-set your API key on each of the deserialized objects-- this ensures the object graph stays intact through the serialization process.
+TypeformData supports serialization via both Marshal and JSON. In either case, your API key will not be serialized, and we throw an error if you attempt to serialize a `TypeformData::Client` instance.
+
+When using Marshal, `TypeformData::Client#dump` is just a pass-through to `Marshal#dump`, but `Client#load` will re-set your API key on each of the deserialized objects-- this ensures the object graph stays intact through the serialization and deserialization process.
 
 ```
 serialized = client.dump(responses)
@@ -61,6 +63,8 @@ deserialized = client.load(serialized)
 > deserialized.first.typeform == responses.first.typeform
 => true
 ```
+
+We do not yet support this sort of 'round-trip' serialization for JSON. PRs are welcome!
 
 ### Error-handling
 
