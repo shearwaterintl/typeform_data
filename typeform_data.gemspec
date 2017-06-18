@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
 
   spec.name          = 'typeform_data'
   spec.version       = TypeformData::VERSION
-  spec.authors       = ['Max Wallace']
+  spec.authors       = ['Max Wallace', 'Eli Rose']
   spec.email         = ['engineering@shearwaterintl.com']
 
   spec.summary       = 'An opinionated, OO client for the Typeform.com Data API'
@@ -35,6 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry-byebug', '~> 3.3'
   spec.add_development_dependency 'pry-doc', '~> 0.8'
   spec.add_development_dependency 'byebug', '~> 8.2'
-  spec.add_development_dependency 'rubocop', '~> 0.39'
+  spec.add_development_dependency 'rubocop', '~> 0.47'
 
 end
