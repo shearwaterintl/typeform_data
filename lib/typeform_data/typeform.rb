@@ -30,7 +30,26 @@ module TypeformData
       set_questions(response['questions'])
 
       response['responses'].map { |api_hash|
-        Response.new(config, api_hash.dup.tap { |hash| hash[:typeform_id] = id }, fields)
+        Response.new(
+          config,
+
+          api_hash.dup.tap { |hash|
+            hash[:typeform_id] = id
+
+            # Sadly, the API returns [] if there aren't any Hidden Fields, and  { ... } if there
+            # are.
+            unless hash['hidden'].is_a?(Hash)
+              unless hash['hidden'] == []
+                config.logger.error "Received an unexpected value for a responses's hidden fields "\
+                  "from the API: #{hash['hidden']}. Using {} instead. The full hash is:\n"\
+                  "#{api_hash}"
+              end
+              hash['hidden'] = {}
+            end
+          },
+
+          fields,
+        )
       }
     end
 
