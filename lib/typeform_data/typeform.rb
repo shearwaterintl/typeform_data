@@ -39,11 +39,7 @@ module TypeformData
             # Sadly, the API returns [] if there aren't any Hidden Fields, and  { ... } if there
             # are.
             unless hash['hidden'].is_a?(Hash)
-              unless hash['hidden'] == []
-                config.logger.error "Received an unexpected value for a responses's hidden fields "\
-                  "from the API: #{hash['hidden']}. Using {} instead. The full hash is:\n"\
-                  "#{api_hash}"
-              end
+              log_if_unexpected_value_for_hidden(hash)
               hash['hidden'] = {}
             end
           },
@@ -190,6 +186,12 @@ module TypeformData
       end
 
       params
+    end
+
+    def log_if_unexpected_value_for_hidden(hash)
+      return if hash['hidden'] == []
+      config.logger.error "Received an unexpected value for a response's hidden fields "\
+        "from the API: #{hash['hidden']}. Using {} instead. The full hash is:\n#{hash}"
     end
 
   end
