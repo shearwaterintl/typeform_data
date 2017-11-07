@@ -13,17 +13,18 @@ module TypeformData
 
       seconds_to_wait = initial_wait
 
-      max_retries.times do |iteration|
+      (1..max_retries).times do |iteration|
         begin
           break yield
         rescue *retry_exceptions
-          config.logger.warn "Retry. Waiting #{seconds_to_wait}s, attempt #{iteration} of "\
-            "#{max_retries}."
+          config.logger.warn <<~M
+            Retry. Waiting #{seconds_to_wait}s, on retry #{iteration} of \#{max_retries}.
+          M
 
           sleep seconds_to_wait
           seconds_to_wait *= 2
 
-          raise if iteration == max_retries - 1
+          raise if iteration == max_retries
         end
       end
     end
