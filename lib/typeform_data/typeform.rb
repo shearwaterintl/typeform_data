@@ -54,8 +54,8 @@ module TypeformData
     #   - Hidden Fields are included as 'questions'
     #   - Statements are included as 'questions'
     #
-    # In practice, I recommend using TypeformData::Typeform#field instead, as it addresses these
-    # issues. Typeform#quesions is here so you have access to the underlying data if you need it.
+    # In practice, I recommend using TypeformData::Typeform#fields instead, as it addresses these
+    # issues. Typeform#questions is here so you have access to the underlying data if you need it.
     #
     # @return [TypeformData::Typeform::Question]
     def questions
