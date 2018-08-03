@@ -1,6 +1,6 @@
 # NOTE
 
-Typeform has deprecated or will deprecate the Data API -- we suggest that you use the https://developer.typeform.com/responses/ (Responses API) instead.
+Typeform has deprecated or will deprecate the Data API -- we suggest that you use the [Responses API](https://developer.typeform.com/responses/) instead.
 
 # TypeformData
 
