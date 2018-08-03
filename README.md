@@ -1,3 +1,7 @@
+# NOTE
+
+Typeform has deprecated or will deprecate the Data API -- we suggest that you use the https://developer.typeform.com/responses/ (Responses API) instead.
+
 # TypeformData
 
 A Ruby gem and client for Typeform's [Data API](https://www.typeform.com/help/data-api/). Our documentation is available [here](http://www.rubydoc.info/gems/typeform_data/TypeformData/Typeform).
